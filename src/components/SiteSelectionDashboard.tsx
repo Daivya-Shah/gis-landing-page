@@ -1,6 +1,6 @@
 import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/components/Images/site-selection-hero.png";
 import newmarkLogo from "@/components/Icons/newmark-workframe.svg";
 import mailIcon from "@/components/Icons/mail.svg";
 
@@ -8,6 +8,8 @@ const SiteSelectionDashboard = () => {
   // form state
   const [clientName, setClientName] = useState("");
   const turnaroundOptions = ["3 days", "1 week", "2 weeks", "1 month"];
+  const dealStageOptions = ["Prospecting", "Negotiation", "Contract", "Closed Won", "Closed Lost"];
+  const [dealStage, setDealStage] = useState<string>(dealStageOptions[0]);
   const [turnaround, setTurnaround] = useState<string>(turnaroundOptions[0]);
   const requiredDataOptions = [
     "Labor",
@@ -22,6 +24,15 @@ const SiteSelectionDashboard = () => {
   const [requiredData, setRequiredData] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
 
+  // Compose mailto link and open default mail client
+  const handleRequestReport = () => {
+    const body = encodeURIComponent(
+      `Client Name: ${clientName}\nDeal Stage: ${dealStage}\nTurnaround Time: ${turnaround}\nRequired Data: ${requiredData.join(", ")}\nNotes: ${notes}`
+    );
+    const mailto = `mailto:?subject=Site%20Selection%20Report&body=${body}`;
+    window.location.href = mailto;
+  };
+
   const toggleRequired = (option: string) => {
     setRequiredData((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
@@ -30,9 +41,31 @@ const SiteSelectionDashboard = () => {
 
   // Turnaround Time Toggle Group layout
   return (
-    <div style={{ width: "1440px", height: "1227px", background: "hsl(var(--color-surface-50))", overflow: "hidden", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
+    <div
+      style={{
+        width: "100vw",
+        minHeight: "100vh",
+        background: "hsl(var(--color-surface-50))",
+        overflow: "hidden",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        display: "flex",
+      }}
+    >
       {/* Collapsed Sidebar */}
-      <div data-collapsed="True" style={{ height: "1227px", padding: "8px", background: "hsl(var(--color-primary-contrast))", borderRight: "1px hsl(var(--content-border-color)) solid", flexDirection: "column", justifyContent: "space-between", alignItems: "center", display: "inline-flex" }}>
+      <div
+        data-collapsed="True"
+        style={{
+          height: "100vh",
+          padding: "8px",
+          background: "hsl(var(--color-primary-contrast))",
+          borderRight: "1px hsl(var(--content-border-color)) solid",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          display: "inline-flex",
+        }}
+      >
         <div style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "flex" }}>
           {/* Logo */}
           <div data-collapsed="True" style={{ padding: "8px", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "inline-flex" }}>
@@ -140,7 +173,7 @@ const SiteSelectionDashboard = () => {
         {/* Main Content Layout */}
         <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
           {/* Left Content Area */}
-          <div style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
+          <div style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px 0 32px 32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
             {/* Title and Description */}
             <div style={{ width: "877px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "8px", display: "inline-flex" }}>
               <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px", wordWrap: "break-word" }}>Site selection & location strategy reports</div>
@@ -148,22 +181,21 @@ const SiteSelectionDashboard = () => {
             </div>
 
             {/* Hero Image */}
-            <img 
-              style={{ 
-                width: "861px", 
-                height: "553px", 
-                background: "linear-gradient(0deg, #23C4FF 0%, #23C4FF 100%)", 
-                backgroundBlendMode: "multiply, luminosity", 
-                boxShadow: "32px 32px 0px #003E69" 
-              }} 
-              src={heroImage} 
+            <img
+              style={{
+                width: "calc(100% - 32px)", // 32px gap to right form
+                height: "553px",
+                objectFit: "cover",
+                marginRight: "32px",
+              }}
+              src={heroImage}
               alt="Site Selection Dashboard"
             />
 
             {/* Service Cards Container */}
-            <div style={{ width: "861px", left: "32px", top: "302px", position: "absolute", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "24px", justifyContent: "flex-start", alignItems: "flex-start" }}>
+            <div className="cards-container" style={{ width: "100%", marginTop: "-250px", paddingRight: "32px" }}>
               {/* Labor Analytics Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <User size={32} style={{ color: "hsl(var(--brand-white))" }} />
@@ -174,7 +206,7 @@ const SiteSelectionDashboard = () => {
               </div>
 
               {/* Market Trends Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <TrendingUp size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
@@ -185,7 +217,7 @@ const SiteSelectionDashboard = () => {
               </div>
 
               {/* GIS Data Analysis Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <MapPin size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
@@ -196,7 +228,7 @@ const SiteSelectionDashboard = () => {
               </div>
 
               {/* Risk Mitigation Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <Shield size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
@@ -207,7 +239,7 @@ const SiteSelectionDashboard = () => {
               </div>
 
               {/* Transportation & Emergency Planning Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <Truck size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
@@ -218,7 +250,7 @@ const SiteSelectionDashboard = () => {
               </div>
 
               {/* Competitive Analysis Card */}
-              <div style={{ alignSelf: "stretch", minWidth: "380px", width: "calc(50% - 12px)", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
+              <div style={{ padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                     <BarChart3 size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
@@ -234,7 +266,7 @@ const SiteSelectionDashboard = () => {
           <div style={{ width: "459px", height: "1173px", position: "relative", background: "white", overflow: "hidden", borderLeft: "1px hsl(var(--color-surface-100)) solid", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
             {/* Bottom Button */}
             <div style={{ width: "459px", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0px", top: "1101px", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
-              <button type="button" onClick={() => {}} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
+              <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
                 <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
                 <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Request client report</div>
               </button>
@@ -276,13 +308,27 @@ const SiteSelectionDashboard = () => {
                 {/* Deal Stage Input */}
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
-                  <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+                  <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
                     <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
-                    <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", display: "inline-flex" }}>
-                      <div style={{ alignSelf: "stretch", overflow: "hidden", justifyContent: "flex-start", alignItems: "center", display: "inline-flex" }}>
-                        <div style={{ flex: "1 1 0", color: "hsl(var(--inputtext-placeholder-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Select deal stage</div>
-                      </div>
-                    </div>
+                    <select
+                      value={dealStage}
+                      onChange={(e) => setDealStage(e.target.value)}
+                      style={{
+                        flex: 1,
+                        border: "none",
+                        outline: "none",
+                        background: "transparent",
+                        color: "hsl(var(--color-surface-900))",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {dealStageOptions.map((opt) => (
+                        <option value={opt} key={opt} style={{ color: "black" }}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
                     <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                   </div>
                 </div>
