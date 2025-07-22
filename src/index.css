@@ -38,6 +38,44 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* Custom design system variables */
+    --color-surface-50: 212 100% 97%;
+    --color-surface-0: 0 0% 100%;
+    --color-surface-100: 210 40% 96%;
+    --color-surface-300: 213 27% 84%;
+    --color-surface-500: 215 20% 65%;
+    --color-surface-900: 222 84% 5%;
+    --color-primary-color: 204 100% 36%;
+    --color-primary-contrast: 0 0% 100%;
+    --content-border-color: 213 27% 84%;
+    --menu-item-focus-background: 210 40% 96%;
+    --menu-item-focus-color: 222 47% 18%;
+    --menu-item-color: 215 25% 27%;
+    --purple-600: 271 81% 56%;
+    --teal-600: 172 82% 29%;
+    --indigo-500: 239 84% 67%;
+    --brand-white: 0 0% 100%;
+    --brand-light-gray: 0 0% 80%;
+    --brand-newmark-blue: 204 100% 36%;
+    --brand-black: 0 0% 0%;
+    --brand-dark-gray: 0 0% 40%;
+    --breadcrumb-background: 0 0% 100%;
+    --breadcrumb-item-icon-color: 215 28% 70%;
+    --breadcrumb-separator-color: 215 28% 70%;
+    --breadcrumb-item-color: 215 20% 65%;
+    --text-color: 215 25% 27%;
+    --inputtext-background: 0 0% 100%;
+    --inputtext-border-color: 213 27% 84%;
+    --inputtext-placeholder-color: 215 20% 65%;
+    --iconfield-icon-color: 215 28% 70%;
+    --button-primary-border-color: 204 100% 36%;
+    --button-primary-color: 0 0% 100%;
+    --togglebutton-checked-background: 210 40% 96%;
+    --togglebutton-content-checked-background: 0 0% 100%;
+    --togglebutton-color: 215 20% 65%;
+    --checkbox-background: 0 0% 100%;
+    --checkbox-border-color: 213 27% 84%;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
