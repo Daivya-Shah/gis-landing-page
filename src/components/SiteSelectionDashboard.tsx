@@ -1,10 +1,34 @@
 import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import heroImage from "@/assets/hero-image.jpg";
-import userAvatar from "@/assets/user-avatar.jpg";
 import newmarkLogo from "@/components/Icons/newmark-workframe.svg";
 import mailIcon from "@/components/Icons/mail.svg";
 
 const SiteSelectionDashboard = () => {
+  // form state
+  const [clientName, setClientName] = useState("");
+  const turnaroundOptions = ["3 days", "1 week", "2 weeks", "1 month"];
+  const [turnaround, setTurnaround] = useState<string>(turnaroundOptions[0]);
+  const requiredDataOptions = [
+    "Labor",
+    "Energy",
+    "Transit",
+    "Occupancy",
+    "Zoning & Regulatory",
+    "Cost",
+    "Environmental",
+    "Other (leave a note)",
+  ];
+  const [requiredData, setRequiredData] = useState<string[]>([]);
+  const [notes, setNotes] = useState<string>("");
+
+  const toggleRequired = (option: string) => {
+    setRequiredData((prev) =>
+      prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option]
+    );
+  };
+
+  // Turnaround Time Toggle Group layout
   return (
     <div style={{ width: "1440px", height: "1227px", background: "hsl(var(--color-surface-50))", overflow: "hidden", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
       {/* Collapsed Sidebar */}
@@ -91,7 +115,7 @@ const SiteSelectionDashboard = () => {
         {/* User Avatar at Bottom */}
         <div data-show-label="false" data-show-right-icon="false" data-state="Idle" style={{ width: "40px", height: "44px", padding: "8px", borderRadius: "6px", justifyContent: "space-between", alignItems: "center", display: "inline-flex" }}>
           <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-            <div style={{ width: "28px", height: "28px", borderRadius: "6px", background: "hsl(var(--color-surface-200))" }}></div>
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "hsl(var(--color-surface-200))" }}></div>
           </div>
         </div>
       </div>
@@ -229,13 +253,23 @@ const SiteSelectionDashboard = () => {
                 {/* Client Name Input */}
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Client Name *</div>
-                  <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+                  <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
                     <Building2 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
-                    <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", display: "inline-flex" }}>
-                      <div style={{ alignSelf: "stretch", overflow: "hidden", justifyContent: "flex-start", alignItems: "center", display: "inline-flex" }}>
-                        <div style={{ flex: "1 1 0", color: "hsl(var(--inputtext-placeholder-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Enter company</div>
-                      </div>
-                    </div>
+                    <input
+                      type="text"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      placeholder="Enter company"
+                      style={{
+                        flex: 1,
+                        border: "none",
+                        outline: "none",
+                        background: "transparent",
+                        color: "hsl(var(--color-surface-900))",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -256,69 +290,65 @@ const SiteSelectionDashboard = () => {
                 {/* Turnaround Time Toggle Group */}
                 <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Turnaround Time *</div>
-                  <div style={{ alignSelf: "stretch", background: "hsl(var(--color-surface-100))", borderRadius: "6px", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
-                    <div style={{ flex: "1 1 0", padding: "2px", background: "hsl(var(--togglebutton-checked-background))", borderTopLeftRadius: "6px", borderBottomLeftRadius: "6px", borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex" }}>
-                      <div style={{ flex: "1 1 0", paddingLeft: "10px", paddingRight: "10px", paddingTop: "6px", paddingBottom: "6px", background: "hsl(var(--togglebutton-content-checked-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "4px", justifyContent: "center", alignItems: "center", gap: "7px", display: "flex" }}>
-                        <div style={{ color: "hsl(var(--color-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>3 days</div>
-                      </div>
-                    </div>
-                    <div style={{ flex: "1 1 0", padding: "2px", background: "hsl(var(--color-surface-100))", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex" }}>
-                      <div style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "6px", paddingBottom: "6px", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "4px", justifyContent: "center", alignItems: "center", gap: "7px", display: "flex" }}>
-                        <div style={{ color: "hsl(var(--togglebutton-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>1 week</div>
-                      </div>
-                    </div>
-                    <div style={{ flex: "1 1 0", padding: "2px", background: "hsl(var(--color-surface-100))", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex" }}>
-                      <div style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "6px", paddingBottom: "6px", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "4px", justifyContent: "center", alignItems: "center", gap: "7px", display: "flex" }}>
-                        <div style={{ color: "hsl(var(--togglebutton-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>2 weeks</div>
-                      </div>
-                    </div>
-                    <div style={{ flex: "1 1 0", padding: "2px", background: "hsl(var(--color-surface-100))", borderTopRightRadius: "6px", borderBottomRightRadius: "6px", borderTop: "1px hsl(var(--color-surface-300)) solid", borderRight: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex" }}>
-                      <div style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "6px", paddingBottom: "6px", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "4px", justifyContent: "center", alignItems: "center", gap: "7px", display: "flex" }}>
-                        <div style={{ color: "hsl(var(--togglebutton-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>1 month</div>
-                      </div>
+                  <div style={{ alignSelf: "stretch", background: "hsl(var(--color-surface-100))", borderRadius: "6px", display: "flex" }}>
+                    {turnaroundOptions.map((opt, idx) => {
+                        const isSelected = opt === turnaround;
+                        const outerRadius: any = {};
+                        if (idx === 0) {
+                         outerRadius.borderTopLeftRadius = "6px";
+                         outerRadius.borderBottomLeftRadius = "6px";
+                        }
+                        if (idx === turnaroundOptions.length - 1) {
+                         outerRadius.borderTopRightRadius = "6px";
+                         outerRadius.borderBottomRightRadius = "6px";
+                        }
+                        return (
+                          <div key={opt} style={{ flex: 1, padding: "2px", background: isSelected ? "hsl(var(--togglebutton-checked-background))" : "transparent", transition: "background 0.3s ease", ...outerRadius, borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", borderRight: idx === turnaroundOptions.length - 1 ? "1px hsl(var(--color-surface-300)) solid" : "none" }}>
+                            <button
+                              type="button"
+                              onClick={() => setTurnaround(opt)}
+                              style={{
+                                width: "100%",
+                                padding: "6px 10px",
+                                background: isSelected ? "hsl(var(--togglebutton-content-checked-background))" : "transparent",
+                                boxShadow: isSelected ? "0px 1px 2px rgba(18,18,23,0.05)" : "none",
+                                borderRadius: "4px",
+                                border: "none",
+                                cursor: "pointer",
+                                color: isSelected ? "hsl(var(--color-primary-color))" : "hsl(var(--togglebutton-color))",
+                                fontFamily: "Inter",
+                                fontWeight: 600,
+                                fontSize: "14px",
+                                transition: "background 0.3s ease, color 0.3s ease",
+                              }}
+                            >
+                              {opt}
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                </div>
 
                 {/* Required Data Checkboxes */}
                 <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Required Data</div>
                   <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Labor</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Energy</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Transit</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Occupancy</div>
-                      </div>
+                      {requiredDataOptions.slice(0,4).map((opt)=>(
+                        <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                          <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
+                          <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
+                        </div>
+                      ))}
                     </div>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Zoning & Regulatory</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Cost</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Environmental</div>
-                      </div>
-                      <div style={{ borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "inline-flex" }}>
-                        <div style={{ width: "17.50px", height: "17.50px", background: "hsl(var(--checkbox-background))", borderRadius: "4px", border: "1px hsl(var(--checkbox-border-color)) solid" }}></div>
-                        <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Other (leave a note)</div>
-                      </div>
+                      {requiredDataOptions.slice(4).map((opt)=>(
+                        <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                          <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
+                          <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -326,12 +356,24 @@ const SiteSelectionDashboard = () => {
                 {/* Notes Textarea */}
                 <div style={{ alignSelf: "stretch", flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Notes</div>
-                  <div style={{ alignSelf: "stretch", flex: "1 1 0", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
-                    <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", display: "inline-flex" }}>
-                      <div style={{ alignSelf: "stretch", overflow: "hidden", justifyContent: "flex-start", alignItems: "center", display: "inline-flex" }}>
-                        <div style={{ flex: "1 1 0", color: "hsl(var(--inputtext-placeholder-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}></div>
-                      </div>
-                    </div>
+                  <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Enter notes..."
+                      style={{
+                        flex: 1,
+                        width: "100%",
+                        border: "none",
+                        outline: "none",
+                        background: "transparent",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                        color: "hsl(var(--color-surface-900))",
+                        resize: "vertical",
+                        minHeight: "100px",
+                      }}
+                    ></textarea>
                   </div>
                 </div>
               </div>
