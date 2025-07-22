@@ -1,4 +1,4 @@
-import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User } from "lucide-react";
+import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import userAvatar from "@/assets/user-avatar.jpg";
 
@@ -23,61 +23,37 @@ const SiteSelectionDashboard = () => {
             
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Hover" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", background: "hsl(var(--menu-item-focus-background))", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "18.33px", height: "16.67px", left: "0.83px", top: "0.83px", position: "absolute", background: "hsl(var(--menu-item-focus-color))" }}>
-                    <Home className="w-full h-full" />
-                  </div>
-                </div>
+                <Home size={20} style={{ color: "hsl(var(--menu-item-focus-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "18.33px", height: "16.77px", left: "0.83px", top: "1.67px", position: "absolute", background: "hsl(var(--menu-item-color))" }}>
-                    <Building2 className="w-full h-full" />
-                  </div>
-                </div>
+                <Building2 size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "16.67px", height: "16.67px", left: "1.67px", top: "1.67px", position: "absolute", background: "hsl(var(--menu-item-color))" }}>
-                    <BarChart3 className="w-full h-full" />
-                  </div>
-                </div>
+                <BarChart3 size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "16.67px", height: "16.67px", left: "1.67px", top: "1.67px", position: "absolute", background: "hsl(var(--menu-item-color))" }}>
-                    <MapPin className="w-full h-full" />
-                  </div>
-                </div>
+                <MapPin size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "16.67px", height: "18.33px", left: "2.50px", top: "0.83px", position: "absolute", background: "hsl(var(--menu-item-color))" }}>
-                    <Shield className="w-full h-full" />
-                  </div>
-                </div>
+                <Shield size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div style={{ width: "20px", height: "20px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "18.33px", height: "18.33px", left: "0.83px", top: "0.83px", position: "absolute", background: "hsl(var(--menu-item-color))" }}>
-                    <TrendingUp className="w-full h-full" />
-                  </div>
-                </div>
+                <TrendingUp size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
               </div>
             </div>
           </div>
@@ -138,11 +114,7 @@ const SiteSelectionDashboard = () => {
           <div style={{ alignSelf: "stretch", paddingLeft: "24px", paddingRight: "24px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-surface-0))", borderBottom: "1px hsl(var(--content-border-color)) solid", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "inline-flex" }}>
             <div data-segment-1="true" data-segment-2="false" data-segment-3="false" data-segment-4="false" data-segment-5="false" style={{ flex: "1 1 0", padding: "12px", background: "hsl(var(--breadcrumb-background))", borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "flex" }}>
               <div data-focus="False" data-hover="False" data-type="Icon" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
-                <div style={{ width: "14px", height: "14px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ width: "14px", height: "12.40px", left: "0px", top: "0.80px", position: "absolute", background: "hsl(var(--breadcrumb-item-icon-color))" }}>
-                    <Home className="w-full h-full" />
-                  </div>
-                </div>
+                <Home size={14} style={{ color: "hsl(var(--breadcrumb-item-icon-color))" }} />
               </div>
               <div style={{ width: "14px", height: "14px", position: "relative", overflow: "hidden" }}>
                 <div style={{ width: "6.50px", height: "11.50px", left: "3.75px", top: "1.25px", position: "absolute", background: "hsl(var(--breadcrumb-separator-color))" }}>
@@ -185,11 +157,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "29.33px", height: "26.67px", left: "1.33px", top: "1.33px", position: "absolute", background: "hsl(var(--brand-white))" }}>
-                        <User className="w-full h-full" />
-                      </div>
-                    </div>
+                    <User size={32} style={{ color: "hsl(var(--brand-white))" }} />
                   </div>
                   <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
                 </div>
@@ -200,11 +168,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "29.33px", height: "29.33px", left: "1.33px", top: "1.33px", position: "absolute", background: "hsl(var(--color-primary-contrast))" }}>
-                        <TrendingUp className="w-full h-full" />
-                      </div>
-                    </div>
+                    <TrendingUp size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
                   </div>
                   <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
                 </div>
@@ -215,11 +179,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "26.67px", height: "20px", left: "2.67px", top: "6.67px", position: "absolute", background: "hsl(var(--color-primary-contrast))" }}>
-                        <MapPin className="w-full h-full" />
-                      </div>
-                    </div>
+                    <MapPin size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
                   </div>
                   <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
                 </div>
@@ -230,11 +190,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "24px", height: "29.34px", left: "4px", top: "1.33px", position: "absolute", background: "hsl(var(--color-primary-contrast))" }}>
-                        <Shield className="w-full h-full" />
-                      </div>
-                    </div>
+                    <Shield size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
                   </div>
                   <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
                 </div>
@@ -245,11 +201,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "26.67px", height: "22.67px", left: "2.67px", top: "5.33px", position: "absolute", background: "hsl(var(--color-primary-contrast))" }}>
-                        <Truck className="w-full h-full" />
-                      </div>
-                    </div>
+                    <Truck size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
                   </div>
                   <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
                 </div>
@@ -260,11 +212,7 @@ const SiteSelectionDashboard = () => {
               <div style={{ alignSelf: "stretch", minWidth: "380px", padding: "48px", background: "hsl(var(--brand-white))", outline: "1px hsl(var(--brand-light-gray)) solid", outlineOffset: "-1px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "inline-flex" }}>
                 <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                    <div style={{ width: "32px", height: "32px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "29.33px", height: "26.67px", left: "1.33px", top: "2.67px", position: "absolute", background: "hsl(var(--color-primary-contrast))" }}>
-                        <BarChart3 className="w-full h-full" />
-                      </div>
-                    </div>
+                    <BarChart3 size={32} style={{ color: "hsl(var(--color-primary-contrast))" }} />
                   </div>
                   <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
                 </div>
@@ -299,11 +247,7 @@ const SiteSelectionDashboard = () => {
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Client Name *</div>
                   <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
-                    <div style={{ width: "16px", height: "16px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "14.67px", height: "14.67px", left: "0.67px", top: "0.67px", position: "absolute", background: "hsl(var(--iconfield-icon-color))" }}>
-                        <Building2 className="w-full h-full" />
-                      </div>
-                    </div>
+                    <Building2 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                     <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", display: "inline-flex" }}>
                       <div style={{ alignSelf: "stretch", overflow: "hidden", justifyContent: "flex-start", alignItems: "center", display: "inline-flex" }}>
                         <div style={{ flex: "1 1 0", color: "hsl(var(--inputtext-placeholder-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Enter company</div>
@@ -316,21 +260,13 @@ const SiteSelectionDashboard = () => {
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
                   <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
-                    <div style={{ width: "16px", height: "16px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "14.67px", height: "13.41px", left: "0.67px", top: "1.33px", position: "absolute", background: "hsl(var(--iconfield-icon-color))" }}>
-                        <BarChart3 className="w-full h-full" />
-                      </div>
-                    </div>
+                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                     <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", display: "inline-flex" }}>
                       <div style={{ alignSelf: "stretch", overflow: "hidden", justifyContent: "flex-start", alignItems: "center", display: "inline-flex" }}>
                         <div style={{ flex: "1 1 0", color: "hsl(var(--inputtext-placeholder-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}>Select deal stage</div>
                       </div>
                     </div>
-                    <div style={{ width: "16px", height: "16px", position: "relative", overflow: "hidden" }}>
-                      <div style={{ width: "9.33px", height: "5.33px", left: "3.33px", top: "5.33px", position: "absolute", background: "hsl(var(--iconfield-icon-color))" }}>
-                        ▼
-                      </div>
-                    </div>
+                    <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                   </div>
                 </div>
 
