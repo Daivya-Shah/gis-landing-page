@@ -116,7 +116,7 @@ const SiteSelectionDashboard = () => {
             max-width: calc(33.333% - 16px);
           }
           .main-content {
-            padding-right: 32px;
+            padding: 32px;
           }
           .mobile-request-btn {
             display: none !important;
@@ -127,7 +127,7 @@ const SiteSelectionDashboard = () => {
         }
         
         /* Tablet: 2 cards per row, hide sidebar, show mobile button */
-        @media (min-width: 768px) and (max-width: 1799px) {
+        @media (min-width: 992px) and (max-width: 1799px) {
           .service-card {
             flex: 1 1 calc(50% - 12px);
             max-width: calc(50% - 12px);
@@ -139,12 +139,12 @@ const SiteSelectionDashboard = () => {
             display: inline-flex !important;
           }
           .main-content {
-            padding-right: 32px;
+            padding: 32px;
           }
         }
         
         /* Mobile: 1 card per row, hide sidebar, show mobile button */
-        @media (max-width: 767px) {
+        @media (max-width: 991px) {
           .service-card {
             flex: 1 1 100%;
             max-width: 100%;
@@ -156,10 +156,11 @@ const SiteSelectionDashboard = () => {
             display: inline-flex !important;
           }
           .main-content {
-            padding: 16px;
+            padding: 32px 16px;
           }
           .hero-image {
             width: 100% !important;
+            height: auto !important;
             margin-right: 0 !important;
           }
           .cards-container {
@@ -322,7 +323,7 @@ const SiteSelectionDashboard = () => {
         <div data-show-label="false" data-show-right-icon="false" data-state="Idle" style={{ width: "40px", height: "44px", padding: "8px", borderRadius: "6px", justifyContent: "space-between", alignItems: "center", display: "inline-flex" }}>
           <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
               <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "hsl(var(--color-surface-200))" }}></div>
-            </div>
+          </div>
         </div>
       </div>
 
@@ -336,10 +337,10 @@ const SiteSelectionDashboard = () => {
                 <Home size={14} style={{ color: "hsl(var(--breadcrumb-item-icon-color))" }} />
               </div>
                 <ChevronRight size={14} style={{ color: "hsl(var(--breadcrumb-separator-color))" }} />
-                <div data-focus="False" data-hover="False" data-type="Label" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
-                  <div style={{ color: "hsl(var(--breadcrumb-item-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "14px", wordWrap: "break-word" }}>Site Selection</div>
-                </div>
+              <div data-focus="False" data-hover="False" data-type="Label" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
+                <div style={{ color: "hsl(var(--breadcrumb-item-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "14px", wordWrap: "break-word" }}>Site Selection</div>
               </div>
+            </div>
               
               {/* Mobile Request Button */}
               <button
@@ -352,6 +353,8 @@ const SiteSelectionDashboard = () => {
                   paddingBottom: "8px",
                   background: "hsl(var(--color-primary-color))",
                   borderRadius: "6px",
+                  outline: "1px hsl(var(--button-primary-border-color)) solid",
+                  outlineOffset: "-1px",
                   border: "none",
                   cursor: "pointer",
                   justifyContent: "center",
@@ -360,8 +363,8 @@ const SiteSelectionDashboard = () => {
                   display: "flex"
                 }}
               >
-                <User size={14} style={{ color: "hsl(var(--button-primary-color))" }} />
-                <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request Report</div>
+                <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
+                <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request client report</div>
               </button>
           </div>
         </div>
@@ -369,7 +372,7 @@ const SiteSelectionDashboard = () => {
         {/* Main Content Layout */}
         <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
           {/* Left Content Area */}
-            <div className="main-content" style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px 0 32px 32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
+            <div className="main-content" style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
             {/* Title and Description */}
               <div className="title-section" style={{ width: "877px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "8px", display: "inline-flex" }}>
               <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px", wordWrap: "break-word" }}>Site selection & location strategy reports</div>
@@ -380,26 +383,25 @@ const SiteSelectionDashboard = () => {
             <img 
                 className="hero-image"
               style={{ 
-                  width: "calc(100% - 32px)", // 32px gap to right form
+                  width: "100%", 
                 height: "553px", 
                   objectFit: "cover",
-                  marginRight: "32px",
               }} 
               src={heroImage} 
               alt="Site Selection Dashboard"
             />
 
             {/* Service Cards Container */}
-              <div className="cards-container" style={{ width: "calc(100% - 32px)", marginTop: "-250px" }}>
+              <div className="cards-container" style={{ width: "100%", marginTop: "-250px" }}>
               {/* Labor Analytics Card */}
                 <div className="service-card">
                   <div className="service-card-content">
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={briefcaseIcon} style={{ width: "32px", height: "32px" }} alt="Briefcase" />
-                      </div>
-                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
-                    </div>
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Empower site selection with workforce data to optimize access to talent and reduce talent-related risk.</div>
                   </div>
               </div>
@@ -410,9 +412,9 @@ const SiteSelectionDashboard = () => {
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={mapPinnedIcon} style={{ width: "32px", height: "32px" }} alt="Map Pinned" />
-                      </div>
-                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
-                    </div>
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Deliver timely market intelligence for strategic portfolio decisions and competitive leasing advantages.</div>
                   </div>
               </div>
@@ -423,9 +425,9 @@ const SiteSelectionDashboard = () => {
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={textSearchIcon} style={{ width: "32px", height: "32px" }} alt="Text Search" />
-                      </div>
-                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
-                    </div>
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Visualize location intelligence to identify optimal sites and assess spatial impacts on portfolio growth.</div>
                   </div>
               </div>
@@ -436,9 +438,9 @@ const SiteSelectionDashboard = () => {
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={shieldHalfIcon} style={{ width: "32px", height: "32px" }} alt="Shield Half" />
-                      </div>
-                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
-                    </div>
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Uncover risks in occupancy, regulation, and market shifts to safeguard your property portfolio decisions.</div>
                   </div>
               </div>
@@ -449,9 +451,9 @@ const SiteSelectionDashboard = () => {
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={carFrontIcon} style={{ width: "32px", height: "32px" }} alt="Car Front" />
-                      </div>
-                      <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
-                    </div>
+                  </div>
+                  <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Analyze transit and emergency access to ensure business continuity and site accessibility.</div>
                   </div>
               </div>
@@ -462,9 +464,9 @@ const SiteSelectionDashboard = () => {
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
                         <img src={chartNoAxesIcon} style={{ width: "32px", height: "32px" }} alt="Chart No Axes" />
-                      </div>
-                      <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
-                    </div>
+                  </div>
+                  <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
+                </div>
                     <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Benchmark nearby assets and leasing activity to inform strategies and differentiate your property's value.</div>
                   </div>
               </div>
@@ -538,7 +540,7 @@ const SiteSelectionDashboard = () => {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                    <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                   </div>
                 </div>
 
