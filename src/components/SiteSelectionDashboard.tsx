@@ -66,7 +66,8 @@ const SiteSelectionDashboard = () => {
         /* Desktop: 3 cards per row */
         @media (min-width: 1024px) {
           .service-card {
-            width: calc(33.333% - 16px);
+            flex: 1 1 calc(33.333% - 16px);
+            max-width: calc(33.333% - 16px);
           }
         }
         
@@ -74,6 +75,7 @@ const SiteSelectionDashboard = () => {
         @media (min-width: 768px) and (max-width: 1023px) {
           .service-card {
             width: calc(50% - 12px);
+            flex: 1 1 auto;
           }
         }
         
@@ -236,7 +238,7 @@ const SiteSelectionDashboard = () => {
               />
 
               {/* Service Cards Container */}
-              <div style={{ width: "100%", marginTop: "-250px", paddingRight: "32px", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "24px", justifyContent: "flex-start", alignItems: "flex-start" }}>
+              <div style={{ width: "calc(100% - 32px)", marginTop: "-250px", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "24px", justifyContent: "flex-start", alignItems: "flex-start" }}>
                 {/* Labor Analytics Card */}
                 <div className="service-card">
                   <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
