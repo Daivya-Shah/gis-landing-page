@@ -39,6 +39,18 @@ const SiteSelectionDashboard = () => {
   const [notes, setNotes] = useState<string>("");
   const [showMobileForm, setShowMobileForm] = useState(false);
 
+  // lock body scroll when modal is open
+  useEffect(() => {
+    if (showMobileForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showMobileForm]);
+
   // Custom dropdown for Deal Stage
   const [dealStageOpen, setDealStageOpen] = useState(false);
 
@@ -131,14 +143,24 @@ const SiteSelectionDashboard = () => {
         }
         
         .right-sidebar {
+          position: sticky;
+          top: 56px; /* sticks below header */
+          right: 0;
+          height: calc(100vh - 56px);
           width: 459px;
           background: white;
           border-left: 1px hsl(var(--color-surface-100)) solid;
-          flex-shrink: 0;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
         }
         
         .mobile-request-btn {
           display: none;
+        }
+        
+        .desktop-request-btn {
+          display: inline-flex;
         }
         
         /* Desktop: 3 cards per row, keep sidebar visible */
@@ -149,8 +171,12 @@ const SiteSelectionDashboard = () => {
           }
           .main-content {
             padding: 32px;
+            margin-right: 0; /* sidebar already occupies space in flex layout */
           }
           .mobile-request-btn {
+            display: none !important;
+          }
+          .desktop-request-btn {
             display: none !important;
           }
           .right-sidebar {
@@ -158,23 +184,24 @@ const SiteSelectionDashboard = () => {
           }
         }
         
-        /* Tablet: 2 cards per row, hide sidebar, show mobile button */
+        /* Tablet: 2 cards per row, sidebar hidden */
         @media (min-width: 992px) and (max-width: 1799px) {
           .service-card {
             flex: 1 1 calc(50% - 12px);
             max-width: calc(50% - 12px);
           }
+          .main-content {
+            padding: 32px;
+            margin-right: 0;
+          }
+          .cards-container {
+            margin-top: -200px;
+          }
           .right-sidebar {
             display: none !important;
           }
           .mobile-request-btn {
-            display: inline-flex !important;
-          }
-          .main-content {
-            padding: 32px;
-          }
-          .cards-container {
-            margin-top: -200px;
+            display: none !important;
           }
         }
         
@@ -188,10 +215,11 @@ const SiteSelectionDashboard = () => {
             display: none !important;
           }
           .mobile-request-btn {
-            display: inline-flex !important;
+            display: none !important;
           }
           .main-content {
             padding: 32px 16px;
+            margin-right: 0 !important;
           }
           .hero-image {
             width: 100% !important;
@@ -403,9 +431,29 @@ const SiteSelectionDashboard = () => {
           {/* Left Content Area */}
             <div className="main-content" style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
             {/* Title and Description */}
-              <div className="title-section" style={{ width: "877px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "8px", display: "inline-flex" }}>
-              <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px", wordWrap: "break-word" }}>Site selection & location strategy reports</div>
-              <div style={{ alignSelf: "stretch", color: "hsl(var(--color-surface-500))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Tailored insights to drive critical location decisions for your clients.</div>
+              <div className="title-section" style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: "24px", display: "flex" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px" }}>Site selection & location strategy reports</div>
+                  <div style={{ color: "hsl(var(--color-surface-500))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Tailored insights to drive critical location decisions for your clients.</div>
+                </div>
+                <button
+                  className="desktop-request-btn"
+                  onClick={() => setShowMobileForm(true)}
+                  style={{
+                    padding: "8px 16px",
+                    background: "hsl(var(--color-primary-color))",
+                    borderRadius: "6px",
+                    outline: "1px hsl(var(--button-primary-border-color)) solid",
+                    outlineOffset: "-1px",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request report</div>
+                </button>
             </div>
 
             {/* Hero Image */}
@@ -503,7 +551,7 @@ const SiteSelectionDashboard = () => {
           </div>
 
           {/* Right Sidebar Form */}
-            <div className="right-sidebar" style={{ height: "100%", position: "relative", overflow: "hidden", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
+            <div className="right-sidebar">
             {/* Bottom Button */}
               <div style={{ width: "459px", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0px", bottom: "0px", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
