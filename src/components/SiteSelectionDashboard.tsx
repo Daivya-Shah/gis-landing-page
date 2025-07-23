@@ -1,21 +1,29 @@
-import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown, ChevronRight, X, BriefcaseBusiness } from "lucide-react";
+import { useState, useEffect } from "react";
 import heroImage from "@/components/Images/site-selection-hero.png";
 import newmarkLogo from "@/components/Icons/newmark-workframe.svg";
 import mailIcon from "@/components/Icons/mail.svg";
-import briefcaseIcon from "@/components/Icons/briefcase-business.svg";
 import mapPinnedIcon from "@/components/Icons/map-pinned.svg";
 import textSearchIcon from "@/components/Icons/text-search.svg";
 import shieldHalfIcon from "@/components/Icons/shield-half.svg";
 import carFrontIcon from "@/components/Icons/car-front.svg";
 import chartNoAxesIcon from "@/components/Icons/chart-no-axes-combined.svg";
+import handshakeIcon from "@/components/Icons/handshake.svg";
+import userSearchIcon from "@/components/Icons/user-search.svg";
+import chartColumnIcon from "@/components/Icons/chart-column.svg";
+import filePenLineIcon from "@/components/Icons/file-pen-line.svg";
+import building2IconSvg from "@/components/Icons/building-2.svg";
+import crucialLogoIcon from "@/components/Icons/Crucial AI Logo.svg";
+import avatarsIcon from "@/components/Icons/Avatars.svg";
+import avatars2Icon from "@/components/Icons/Avatars (2).svg";
 
 const SiteSelectionDashboard = () => {
   // form state
   const [clientName, setClientName] = useState("");
   const turnaroundOptions = ["3 days", "1 week", "2 weeks", "1 month"];
+  // Deal stage options and state
   const dealStageOptions = ["Prospecting", "Negotiation", "Contract", "Closed Won", "Closed Lost"];
-  const [dealStage, setDealStage] = useState<string>(dealStageOptions[0]);
+  const [dealStage, setDealStage] = useState<string>("");
   const [turnaround, setTurnaround] = useState<string>(turnaroundOptions[0]);
   const requiredDataOptions = [
     "Labor",
@@ -30,6 +38,28 @@ const SiteSelectionDashboard = () => {
   const [requiredData, setRequiredData] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
   const [showMobileForm, setShowMobileForm] = useState(false);
+
+  // Custom dropdown for Deal Stage
+  const [dealStageOpen, setDealStageOpen] = useState(false);
+
+  const toggleDealStageOpen = () => setDealStageOpen((prev) => !prev);
+
+  const handleSelectDealStage = (value: string) => {
+    setDealStage(value);
+    setDealStageOpen(false);
+  };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".deal-stage-container")) {
+        setDealStageOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Compose mailto link and open default mail client
   const handleRequestReport = () => {
@@ -47,6 +77,7 @@ const SiteSelectionDashboard = () => {
   };
 
   // Turnaround Time Toggle Group layout
+  const dealStageColor = dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))";
   return (
     <div>
       <style>{`
@@ -92,6 +123,7 @@ const SiteSelectionDashboard = () => {
           gap: 24px;
           justify-content: flex-start;
           align-items: flex-start;
+          margin-top: -250px; /* default desktop overlap */
         }
         
         .main-content {
@@ -141,6 +173,9 @@ const SiteSelectionDashboard = () => {
           .main-content {
             padding: 32px;
           }
+          .cards-container {
+            margin-top: -200px;
+          }
         }
         
         /* Mobile: 1 card per row, hide sidebar, show mobile button */
@@ -165,7 +200,7 @@ const SiteSelectionDashboard = () => {
           }
           .cards-container {
             width: 100% !important;
-            margin-top: -150px !important;
+            margin-top: -120px !important;
           }
           .title-section {
             width: 100% !important;
@@ -252,37 +287,37 @@ const SiteSelectionDashboard = () => {
             
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Hover" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", background: "hsl(var(--menu-item-focus-background))", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <Home size={20} style={{ color: "hsl(var(--menu-item-focus-color))" }} />
+                <BriefcaseBusiness size={20} style={{ color: "hsl(var(--menu-item-focus-color))" }} />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <Building2 size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
+                <img src={handshakeIcon} style={{ width: "20px", height: "20px" }} alt="Handshake" />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <BarChart3 size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
+                <img src={userSearchIcon} style={{ width: "20px", height: "20px" }} alt="User Search" />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <MapPin size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
+                <img src={chartColumnIcon} style={{ width: "20px", height: "20px" }} alt="Chart Column" />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <Shield size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
+                <img src={filePenLineIcon} style={{ width: "20px", height: "20px" }} alt="File Pen" />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <TrendingUp size={20} style={{ color: "hsl(var(--menu-item-color))" }} />
+                <img src={building2IconSvg} style={{ width: "20px", height: "20px" }} alt="Building" />
               </div>
             </div>
           </div>
@@ -293,27 +328,21 @@ const SiteSelectionDashboard = () => {
             
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div data-company="Crucial" style={{ width: "20px", height: "20px", position: "relative", background: "hsl(var(--purple-600))", overflow: "hidden", borderRadius: "6px" }}>
-                  <div style={{ width: "14px", height: "14px", left: "3px", top: "3px", position: "absolute", overflow: "hidden" }}>
-                    <div style={{ width: "66.73px", height: "14px", left: "0px", top: "0px", position: "absolute", background: "white" }}></div>
-                  </div>
+                <div style={{ width: "20px", height: "20px", background: "hsl(var(--purple-600))", borderRadius: "6px", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
+                  <img src={crucialLogoIcon} style={{ width: "14px", height: "14px", objectFit: "contain" }} alt="Crucial AI" />
                 </div>
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div data-company="Arrow" style={{ width: "20px", height: "20px", position: "relative", background: "hsl(var(--teal-600))", overflow: "hidden", borderRadius: "6px" }}>
-                  <div style={{ width: "12.12px", height: "10.50px", left: "3.94px", top: "4px", position: "absolute", background: "hsl(var(--color-surface-0))" }}></div>
-                </div>
+                <img src={avatarsIcon} style={{ width: "20px", height: "20px", borderRadius: "6px" }} alt="Avatars" />
               </div>
             </div>
 
             <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
               <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
-                <div data-company="Northstar" style={{ width: "20px", height: "20px", position: "relative", background: "hsl(var(--indigo-500))", overflow: "hidden", borderRadius: "6px" }}>
-                  <div style={{ width: "12px", height: "12px", left: "3.93px", top: "3.93px", position: "absolute", background: "white" }}></div>
-                </div>
+                <img src={avatars2Icon} style={{ width: "20px", height: "20px", borderRadius: "6px" }} alt="Avatars2" />
               </div>
             </div>
           </div>
@@ -398,7 +427,7 @@ const SiteSelectionDashboard = () => {
                   <div className="service-card-content">
                     <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
                   <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                        <img src={briefcaseIcon} style={{ width: "32px", height: "32px" }} alt="Briefcase" />
+                        <BriefcaseBusiness size={32} style={{ color: "hsl(var(--brand-white))" }} />
                   </div>
                   <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
                 </div>
@@ -520,26 +549,59 @@ const SiteSelectionDashboard = () => {
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
                     <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
-                      <select
-                        value={dealStage}
-                        onChange={(e) => setDealStage(e.target.value)}
+                    <BarChart3 size={16} style={{ color: dealStageColor }} />
+                    <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
+                      <div
+                        onClick={toggleDealStageOpen}
                         style={{
-                          flex: 1,
-                          border: "none",
-                          outline: "none",
-                          background: "transparent",
-                          color: "hsl(var(--color-surface-900))",
+                          cursor: "pointer",
+                          userSelect: "none",
+                          color: dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))",
                           fontFamily: "Inter",
                           fontSize: "14px",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          height: "22px",
                         }}
                       >
-                        {dealStageOptions.map((opt) => (
-                          <option value={opt} key={opt} style={{ color: "black" }}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
+                        {dealStage || "Select deal stage"}
+                      </div>
+
+                      {dealStageOpen && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "calc(100% + 4px)",
+                            left: 0,
+                            right: "-24px",
+                            background: "hsl(var(--brand-white))",
+                            outline: "1px hsl(var(--brand-light-gray)) solid",
+                            borderRadius: "6px",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                            zIndex: 100,
+                          }}
+                        >
+                          {dealStageOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={() => handleSelectDealStage(opt)}
+                              style={{
+                                padding: "8px 12px",
+                                cursor: "pointer",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                color: "hsl(var(--color-surface-900))",
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--menu-item-focus-background))")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                   </div>
                 </div>
@@ -687,26 +749,59 @@ const SiteSelectionDashboard = () => {
                 <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
                   <div style={{ width: "100%", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
-                    <select
-                      value={dealStage}
-                      onChange={(e) => setDealStage(e.target.value)}
-                      style={{
-                        flex: 1,
-                        border: "none",
-                        outline: "none",
-                        background: "transparent",
-                        color: "hsl(var(--color-surface-900))",
-                        fontFamily: "Inter",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {dealStageOptions.map((opt) => (
-                        <option value={opt} key={opt} style={{ color: "black" }}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
+                    <BarChart3 size={16} style={{ color: dealStageColor }} />
+                    <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
+                      <div
+                        onClick={toggleDealStageOpen}
+                        style={{
+                          cursor: "pointer",
+                          userSelect: "none",
+                          color: dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))",
+                          fontFamily: "Inter",
+                          fontSize: "14px",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          height: "22px",
+                        }}
+                      >
+                        {dealStage || "Select deal stage"}
+                      </div>
+
+                      {dealStageOpen && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "calc(100% + 4px)",
+                            left: 0,
+                            right: "-24px",
+                            background: "hsl(var(--brand-white))",
+                            outline: "1px hsl(var(--brand-light-gray)) solid",
+                            borderRadius: "6px",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                            zIndex: 100,
+                          }}
+                        >
+                          {dealStageOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={() => handleSelectDealStage(opt)}
+                              style={{
+                                padding: "8px 12px",
+                                cursor: "pointer",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                color: "hsl(var(--color-surface-900))",
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--menu-item-focus-background))")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                   </div>
                 </div>
