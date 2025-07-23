@@ -943,7 +943,7 @@ const SiteSelectionDashboard = () => {
                     marginTop: "16px" 
                   }}
                 >
-                  <User size={14} style={{ color: "hsl(var(--button-primary-color))" }} />
+                  <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
                   <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request client report</div>
                 </button>
               </div>
