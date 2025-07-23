@@ -60,6 +60,29 @@ const SiteSelectionDashboard = () => {
           align-items: flex-start;
           gap: 24px;
           display: inline-flex;
+          height: 280px; /* Fixed height for consistency */
+          overflow: hidden; /* Prevent text spillover */
+        }
+        
+        .service-card-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          min-height: 0;
+        }
+        
+        .service-card-title {
+          flex-shrink: 0;
+        }
+        
+        .service-card-description {
+          flex: 1;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          line-height: 1.6;
         }
         
         .cards-container {
@@ -86,7 +109,7 @@ const SiteSelectionDashboard = () => {
           display: none;
         }
         
-        /* Desktop: 3 cards per row */
+        /* Desktop: 3 cards per row, keep sidebar visible */
         @media (min-width: 1024px) {
           .service-card {
             flex: 1 1 calc(33.333% - 16px);
@@ -94,6 +117,12 @@ const SiteSelectionDashboard = () => {
           }
           .main-content {
             padding-right: 32px;
+          }
+          .mobile-request-btn {
+            display: none !important;
+          }
+          .right-sidebar {
+            display: flex !important;
           }
         }
         
@@ -104,10 +133,10 @@ const SiteSelectionDashboard = () => {
             max-width: calc(50% - 12px);
           }
           .right-sidebar {
-            display: none;
+            display: none !important;
           }
           .mobile-request-btn {
-            display: inline-flex;
+            display: inline-flex !important;
           }
           .main-content {
             padding-right: 32px;
@@ -121,10 +150,10 @@ const SiteSelectionDashboard = () => {
             max-width: 100%;
           }
           .right-sidebar {
-            display: none;
+            display: none !important;
           }
           .mobile-request-btn {
-            display: inline-flex;
+            display: inline-flex !important;
           }
           .main-content {
             padding: 16px;
@@ -364,68 +393,80 @@ const SiteSelectionDashboard = () => {
               <div className="cards-container" style={{ width: "calc(100% - 32px)", marginTop: "-250px" }}>
                 {/* Labor Analytics Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={briefcaseIcon} style={{ width: "32px", height: "32px" }} alt="Briefcase" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={briefcaseIcon} style={{ width: "32px", height: "32px" }} alt="Briefcase" />
+                      </div>
+                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
                     </div>
-                    <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Empower site selection with workforce data to optimize access to talent and reduce talent-related risk.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Empower site selection with workforce data to optimize access to talent and reduce talent-related risk.</div>
                 </div>
 
                 {/* Market Trends Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={mapPinnedIcon} style={{ width: "32px", height: "32px" }} alt="Map Pinned" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={mapPinnedIcon} style={{ width: "32px", height: "32px" }} alt="Map Pinned" />
+                      </div>
+                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
                     </div>
-                    <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Deliver timely market intelligence for strategic portfolio decisions and competitive leasing advantages.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Deliver timely market intelligence for strategic portfolio decisions and competitive leasing advantages.</div>
                 </div>
 
                 {/* GIS Data Analysis Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={textSearchIcon} style={{ width: "32px", height: "32px" }} alt="Text Search" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={textSearchIcon} style={{ width: "32px", height: "32px" }} alt="Text Search" />
+                      </div>
+                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
                     </div>
-                    <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Visualize location intelligence to identify optimal sites and assess spatial impacts on portfolio growth.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Visualize location intelligence to identify optimal sites and assess spatial impacts on portfolio growth.</div>
                 </div>
 
                 {/* Risk Mitigation Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={shieldHalfIcon} style={{ width: "32px", height: "32px" }} alt="Shield Half" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={shieldHalfIcon} style={{ width: "32px", height: "32px" }} alt="Shield Half" />
+                      </div>
+                      <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
                     </div>
-                    <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Uncover risks in occupancy, regulation, and market shifts to safeguard your property portfolio decisions.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Uncover risks in occupancy, regulation, and market shifts to safeguard your property portfolio decisions.</div>
                 </div>
 
                 {/* Transportation & Emergency Planning Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={carFrontIcon} style={{ width: "32px", height: "32px" }} alt="Car Front" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={carFrontIcon} style={{ width: "32px", height: "32px" }} alt="Car Front" />
+                      </div>
+                      <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
                     </div>
-                    <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Analyze transit and emergency access to ensure business continuity and site accessibility.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Analyze transit and emergency access to ensure business continuity and site accessibility.</div>
                 </div>
 
                 {/* Competitive Analysis Card */}
                 <div className="service-card">
-                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
-                    <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
-                      <img src={chartNoAxesIcon} style={{ width: "32px", height: "32px" }} alt="Chart No Axes" />
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                      <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={chartNoAxesIcon} style={{ width: "32px", height: "32px" }} alt="Chart No Axes" />
+                      </div>
+                      <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
                     </div>
-                    <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Benchmark nearby assets and leasing activity to inform strategies and differentiate your property's value.</div>
                   </div>
-                  <div style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Benchmark nearby assets and leasing activity to inform strategies and differentiate your property's value.</div>
                 </div>
               </div>
             </div>
