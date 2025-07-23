@@ -22,7 +22,7 @@ const SiteSelectionDashboard = () => {
   const [clientName, setClientName] = useState("");
   const turnaroundOptions = ["3 days", "1 week", "2 weeks", "1 month"];
   // Deal stage options and state
-  const dealStageOptions = ["Prospecting", "Negotiation", "Contract", "Closed Won", "Closed Lost"];
+  const dealStageOptions = ["Lead", "Qualified", "Proposal Sent", "Negotiation", "Closed Won", "Closed Lost"];
   const [dealStage, setDealStage] = useState<string>("");
   const [turnaround, setTurnaround] = useState<string>(turnaroundOptions[0]);
   const requiredDataOptions = [
@@ -38,6 +38,21 @@ const SiteSelectionDashboard = () => {
   const [requiredData, setRequiredData] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
   const [showMobileForm, setShowMobileForm] = useState(false);
+
+  // Close modal automatically if sidebar becomes visible (≥1800px)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1800 && showMobileForm) {
+        setShowMobileForm(false);
+      }
+    };
+
+    // Run once on mount to ensure consistency
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [showMobileForm]);
 
   // lock body scroll when modal is open
   useEffect(() => {
@@ -89,7 +104,7 @@ const SiteSelectionDashboard = () => {
   };
 
   // Turnaround Time Toggle Group layout
-  const dealStageColor = dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))";
+  // icon color is constant now; no dynamic color needed
   return (
     <div>
       <style>{`
@@ -277,6 +292,22 @@ const SiteSelectionDashboard = () => {
         .modal-close:hover {
           background: hsl(var(--color-surface-100));
         }
+
+        /* Hover effect for sidebar items */
+        [data-collapsed="True"] div[data-type="Item"]:hover {
+          background: hsl(var(--menu-item-focus-background));
+        }
+        [data-collapsed="True"] div[data-type="Item"]:hover svg {
+          color: hsl(var(--menu-item-focus-color));
+        }
+        /* Hover effects for form elements */
+        .desktop-request-btn:hover,
+        .right-sidebar button[type="button"]:hover,
+        .modal-submit-btn:hover {
+          filter: brightness(1.05);
+        }
+
+        /* Removed hover styles for turnaround buttons and required-data rows */
       `}</style>
       <div
         style={{
@@ -429,7 +460,7 @@ const SiteSelectionDashboard = () => {
                   <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px" }}>Site selection & location strategy reports</div>
                   <div style={{ color: "hsl(var(--color-surface-500))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Tailored insights to drive critical location decisions for your clients.</div>
                 </div>
-              </div>
+            </div>
 
             {/* Hero Image */}
             <img 
@@ -572,7 +603,7 @@ const SiteSelectionDashboard = () => {
                 <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
                     <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <BarChart3 size={16} style={{ color: dealStageColor }} />
+                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                     <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
                       <div
                         onClick={toggleDealStageOpen}
@@ -648,6 +679,7 @@ const SiteSelectionDashboard = () => {
                             <div key={opt} style={{ flex: 1, padding: "2px", background: isSelected ? "hsl(var(--togglebutton-checked-background))" : "transparent", transition: "background 0.3s ease", ...outerRadius, borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", borderRight: idx === turnaroundOptions.length - 1 ? "1px hsl(var(--color-surface-300)) solid" : "none" }}>
                               <button
                                 type="button"
+                                className="turnaround-toggle-btn"
                                 onClick={() => setTurnaround(opt)}
                                 style={{
                                   width: "100%",
@@ -678,7 +710,7 @@ const SiteSelectionDashboard = () => {
                   <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
                         {requiredDataOptions.slice(0,4).map((opt)=>(
-                          <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                          <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
                             <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
                             <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
                       </div>
@@ -686,7 +718,7 @@ const SiteSelectionDashboard = () => {
                     </div>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
                         {requiredDataOptions.slice(4).map((opt)=>(
-                          <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                          <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
                             <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
                             <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
                       </div>
@@ -772,7 +804,7 @@ const SiteSelectionDashboard = () => {
                 <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
                   <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
                   <div style={{ width: "100%", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
-                    <BarChart3 size={16} style={{ color: dealStageColor }} />
+                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
                     <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
                       <div
                         onClick={toggleDealStageOpen}
@@ -848,6 +880,7 @@ const SiteSelectionDashboard = () => {
                           <div key={opt} style={{ flex: 1, padding: "2px", background: isSelected ? "hsl(var(--togglebutton-checked-background))" : "transparent", transition: "background 0.3s ease", ...outerRadius, borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", borderRight: idx === turnaroundOptions.length - 1 ? "1px hsl(var(--color-surface-300)) solid" : "none" }}>
                             <button
                               type="button"
+                              className="turnaround-toggle-btn"
                               onClick={() => setTurnaround(opt)}
                               style={{
                                 width: "100%",
@@ -878,7 +911,7 @@ const SiteSelectionDashboard = () => {
                   <div style={{ width: "100%", justifyContent: "flex-start", alignItems: "flex-start", display: "flex", gap: "16px" }}>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "flex" }}>
                       {requiredDataOptions.slice(0,4).map((opt)=>(
-                        <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                        <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
                           <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
                           <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
                         </div>
@@ -886,7 +919,7 @@ const SiteSelectionDashboard = () => {
                     </div>
                     <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "flex" }}>
                       {requiredDataOptions.slice(4).map((opt)=>(
-                        <div key={opt} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                        <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
                           <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
                           <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
                         </div>
@@ -922,6 +955,7 @@ const SiteSelectionDashboard = () => {
                 {/* Submit Button */}
                 <button 
                   type="button" 
+                  className="modal-submit-btn"
                   onClick={() => {
                     handleRequestReport();
                     setShowMobileForm(false);
