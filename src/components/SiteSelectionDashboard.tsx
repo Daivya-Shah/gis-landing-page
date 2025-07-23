@@ -160,7 +160,7 @@ const SiteSelectionDashboard = () => {
         }
         
         .desktop-request-btn {
-          display: inline-flex;
+          display: none;
         }
         
         /* Desktop: 3 cards per row, keep sidebar visible */
@@ -388,7 +388,7 @@ const SiteSelectionDashboard = () => {
       <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
         <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "20px", display: "flex" }}>
           {/* Header with Breadcrumb */}
-            <div style={{ alignSelf: "stretch", paddingLeft: "24px", paddingRight: "24px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-surface-0))", borderBottom: "1px hsl(var(--content-border-color)) solid", justifyContent: "space-between", alignItems: "center", gap: "10px", display: "inline-flex" }}>
+            <div style={{ alignSelf: "stretch", paddingLeft: "24px", paddingRight: "32px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-surface-0))", borderBottom: "1px hsl(var(--content-border-color)) solid", justifyContent: "space-between", alignItems: "center", gap: "10px", display: "inline-flex" }}>
             <div data-segment-1="true" data-segment-2="false" data-segment-3="false" data-segment-4="false" data-segment-5="false" style={{ flex: "1 1 0", padding: "12px", background: "hsl(var(--breadcrumb-background))", borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "flex" }}>
               <div data-focus="False" data-hover="False" data-type="Icon" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
                 <Home size={14} style={{ color: "hsl(var(--breadcrumb-item-icon-color))" }} />
@@ -398,31 +398,24 @@ const SiteSelectionDashboard = () => {
                 <div style={{ color: "hsl(var(--breadcrumb-item-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "14px", wordWrap: "break-word" }}>Site Selection</div>
               </div>
             </div>
-              
-              {/* Mobile Request Button */}
-              <button
-                className="mobile-request-btn"
-                onClick={() => setShowMobileForm(true)}
-                style={{
-                  paddingLeft: "16px",
-                  paddingRight: "16px",
-                  paddingTop: "8px",
-                  paddingBottom: "8px",
-                  background: "hsl(var(--color-primary-color))",
-                  borderRadius: "6px",
-                  outline: "1px hsl(var(--button-primary-border-color)) solid",
-                  outlineOffset: "-1px",
-                  border: "none",
-                  cursor: "pointer",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "8px",
-                  display: "flex"
-                }}
-              >
-                <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
-                <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request client report</div>
-              </button>
+            <button
+              className="desktop-request-btn"
+              onClick={() => setShowMobileForm(true)}
+              style={{
+                padding: "8px 16px",
+                background: "hsl(var(--color-primary-color))",
+                borderRadius: "6px",
+                outline: "1px hsl(var(--button-primary-border-color)) solid",
+                outlineOffset: "-1px",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request report</div>
+            </button>
           </div>
         </div>
 
@@ -436,25 +429,7 @@ const SiteSelectionDashboard = () => {
                   <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px" }}>Site selection & location strategy reports</div>
                   <div style={{ color: "hsl(var(--color-surface-500))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Tailored insights to drive critical location decisions for your clients.</div>
                 </div>
-                <button
-                  className="desktop-request-btn"
-                  onClick={() => setShowMobileForm(true)}
-                  style={{
-                    padding: "8px 16px",
-                    background: "hsl(var(--color-primary-color))",
-                    borderRadius: "6px",
-                    outline: "1px hsl(var(--button-primary-border-color)) solid",
-                    outlineOffset: "-1px",
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                >
-                  <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request report</div>
-                </button>
-            </div>
+              </div>
 
             {/* Hero Image */}
             <img 
