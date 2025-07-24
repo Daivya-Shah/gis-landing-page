@@ -39,31 +39,39 @@ const SiteSelectionDashboard = () => {
   const [notes, setNotes] = useState<string>("");
   const [showMobileForm, setShowMobileForm] = useState(false);
 
-  // Ref to collapsed sidebar to adjust its height to match full page
+  // Refs to sidebar and main content for matching heights
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  // Ref to right sidebar form (desktop) to adjust its height as well
-  const rightSidebarRef = useRef<HTMLDivElement>(null);
-
-  // Ensure sidebar spans entire page height, not just viewport
+  // Ref to main content to track height changes responsively
+  const mainContentRef = useRef<HTMLDivElement>(null);
+   
+  // Use ResizeObserver plus resize & scroll to sync sidebar height to content height
   useEffect(() => {
     const updateSidebarHeight = () => {
-      if (sidebarRef.current) {
-        sidebarRef.current.style.height = `${document.documentElement.scrollHeight}px`;
-      }
-      if (rightSidebarRef.current) {
-        const headerOffset = 56; // sticky top offset
-        const docHeight = document.documentElement.scrollHeight;
-        rightSidebarRef.current.style.height = `${Math.max(docHeight - headerOffset, 0)}px`;
+      if (sidebarRef.current && mainContentRef.current) {
+        const sidebarTop = sidebarRef.current.getBoundingClientRect().top + window.scrollY;
+        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
+        const newHeight = contentBottom - sidebarTop;
+        sidebarRef.current.style.height = `${newHeight}px`;
       }
     };
 
     updateSidebarHeight();
+
+    // Observe main content size changes
+    let resizeObserver: ResizeObserver | null = null;
+    if (window.ResizeObserver && mainContentRef.current) {
+      resizeObserver = new ResizeObserver(() => updateSidebarHeight());
+      resizeObserver.observe(mainContentRef.current);
+    }
+
+    // Listen to window events that may affect height
     window.addEventListener("resize", updateSidebarHeight);
     window.addEventListener("scroll", updateSidebarHeight);
+
     return () => {
       window.removeEventListener("resize", updateSidebarHeight);
       window.removeEventListener("scroll", updateSidebarHeight);
+      resizeObserver?.disconnect();
     };
   }, []);
 
@@ -189,8 +197,7 @@ const SiteSelectionDashboard = () => {
           position: sticky;
           top: 56px; /* sticks below header */
           right: 0;
-          /* Height will be dynamically set via JS to match page height */
-          min-height: calc(100vh - 56px);
+          height: calc(100vh - 56px);
           width: 459px;
           background: white;
           border-left: 1px hsl(var(--color-surface-100)) solid;
@@ -354,8 +361,8 @@ const SiteSelectionDashboard = () => {
           ref={sidebarRef}
           data-collapsed="True"
           style={{
-            height: "100%", /* span the full page height */
-            minHeight: "100vh", /* at least the viewport height */
+            height: "auto", /* will be set dynamically */
+            minHeight: "100vh", /* at least full viewport */
             padding: "8px",
             background: "hsl(var(--color-primary-contrast))",
             borderRight: "1px hsl(var(--content-border-color)) solid",
@@ -484,7 +491,7 @@ const SiteSelectionDashboard = () => {
         {/* Main Content Layout */}
         <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
           {/* Left Content Area */}
-            <div className="main-content" style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
+            <div className="main-content" ref={mainContentRef} style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
             {/* Title and Description */}
               <div className="title-section" style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: "24px", display: "flex" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -588,9 +595,9 @@ const SiteSelectionDashboard = () => {
           </div>
 
           {/* Right Sidebar Form */}
-            <div className="right-sidebar" ref={rightSidebarRef}>
+            <div className="right-sidebar">
             {/* Bottom Button */}
-              <div style={{ width: "459px", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0px", bottom: "0px", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
+              <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0", bottom: "0", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
                   <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
                 <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Request client report</div>
@@ -598,7 +605,7 @@ const SiteSelectionDashboard = () => {
             </div>
 
             {/* Form Content */}
-            <div style={{ alignSelf: "stretch", height: "1101px", padding: "24px", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", gap: "24px", display: "flex" }}>
+            <div style={{ alignSelf: "stretch", flex: 1, padding: "24px", paddingBottom: "96px", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", gap: "24px", display: "flex" }}>
               <div style={{ alignSelf: "stretch", flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
                 <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Get a custom report for your client</div>
                 <div style={{ alignSelf: "stretch" }}>
