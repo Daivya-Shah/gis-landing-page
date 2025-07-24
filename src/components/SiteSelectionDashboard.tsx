@@ -1,5 +1,5 @@
 import { Home, Building2, BarChart3, MapPin, Shield, Truck, TrendingUp, User, ChevronDown, ChevronRight, X, BriefcaseBusiness } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import heroImage from "@/components/Images/site-selection-hero.png";
 import newmarkLogo from "@/components/Icons/newmark-workframe.svg";
 import mailIcon from "@/components/Icons/mail.svg";
@@ -38,6 +38,34 @@ const SiteSelectionDashboard = () => {
   const [requiredData, setRequiredData] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
   const [showMobileForm, setShowMobileForm] = useState(false);
+
+  // Ref to collapsed sidebar to adjust its height to match full page
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Ref to right sidebar form (desktop) to adjust its height as well
+  const rightSidebarRef = useRef<HTMLDivElement>(null);
+
+  // Ensure sidebar spans entire page height, not just viewport
+  useEffect(() => {
+    const updateSidebarHeight = () => {
+      if (sidebarRef.current) {
+        sidebarRef.current.style.height = `${document.documentElement.scrollHeight}px`;
+      }
+      if (rightSidebarRef.current) {
+        const headerOffset = 56; // sticky top offset
+        const docHeight = document.documentElement.scrollHeight;
+        rightSidebarRef.current.style.height = `${Math.max(docHeight - headerOffset, 0)}px`;
+      }
+    };
+
+    updateSidebarHeight();
+    window.addEventListener("resize", updateSidebarHeight);
+    window.addEventListener("scroll", updateSidebarHeight);
+    return () => {
+      window.removeEventListener("resize", updateSidebarHeight);
+      window.removeEventListener("scroll", updateSidebarHeight);
+    };
+  }, []);
 
   // Close modal automatically if sidebar becomes visible (≥1800px)
   useEffect(() => {
@@ -161,7 +189,8 @@ const SiteSelectionDashboard = () => {
           position: sticky;
           top: 56px; /* sticks below header */
           right: 0;
-          height: calc(100vh - 56px);
+          /* Height will be dynamically set via JS to match page height */
+          min-height: calc(100vh - 56px);
           width: 459px;
           background: white;
           border-left: 1px hsl(var(--color-surface-100)) solid;
@@ -314,17 +343,19 @@ const SiteSelectionDashboard = () => {
           width: "100vw",
           minHeight: "100vh",
           background: "hsl(var(--color-surface-50))",
-          overflow: "hidden",
+          overflow: "visible", /* allow content to define height */
           justifyContent: "flex-start",
-          alignItems: "flex-start",
+          alignItems: "stretch", /* let flex items fill full height */
           display: "flex",
         }}
       >
       {/* Collapsed Sidebar */}
         <div
+          ref={sidebarRef}
           data-collapsed="True"
           style={{
-            height: "100vh",
+            height: "100%", /* span the full page height */
+            minHeight: "100vh", /* at least the viewport height */
             padding: "8px",
             background: "hsl(var(--color-primary-contrast))",
             borderRight: "1px hsl(var(--content-border-color)) solid",
@@ -557,7 +588,7 @@ const SiteSelectionDashboard = () => {
           </div>
 
           {/* Right Sidebar Form */}
-            <div className="right-sidebar">
+            <div className="right-sidebar" ref={rightSidebarRef}>
             {/* Bottom Button */}
               <div style={{ width: "459px", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0px", bottom: "0px", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
