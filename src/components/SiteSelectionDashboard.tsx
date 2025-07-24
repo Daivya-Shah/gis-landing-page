@@ -41,17 +41,31 @@ const SiteSelectionDashboard = () => {
 
   // Refs to sidebar and main content for matching heights
   const sidebarRef = useRef<HTMLDivElement>(null);
+  // Ref for right sidebar to adjust its height to match main content
+  const rightSidebarRef = useRef<HTMLDivElement>(null);
   // Ref to main content to track height changes responsively
   const mainContentRef = useRef<HTMLDivElement>(null);
    
   // Use ResizeObserver plus resize & scroll to sync sidebar height to content height
   useEffect(() => {
     const updateSidebarHeight = () => {
+      // Adjust left collapsed sidebar height
       if (sidebarRef.current && mainContentRef.current) {
         const sidebarTop = sidebarRef.current.getBoundingClientRect().top + window.scrollY;
         const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
         const newHeight = contentBottom - sidebarTop;
         sidebarRef.current.style.height = `${newHeight}px`;
+      }
+
+      // Adjust right sidebar height so it always reaches the bottom of the page
+      if (rightSidebarRef.current && mainContentRef.current) {
+        const sidebarTop = rightSidebarRef.current.getBoundingClientRect().top + window.scrollY;
+        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
+        const newHeight = contentBottom - sidebarTop;
+        // Only grow if content is taller than viewport; otherwise, fallback to min height
+        if (newHeight > 0) {
+          rightSidebarRef.current.style.minHeight = `${newHeight}px`;
+        }
       }
     };
 
@@ -144,6 +158,10 @@ const SiteSelectionDashboard = () => {
   return (
     <div>
       <style>{`
+        /* Prevent any accidental horizontal overflow */
+        html, body {
+          overflow-x: hidden;
+        }
         .service-card {
           padding: 48px;
           background: hsl(var(--brand-white));
@@ -197,7 +215,7 @@ const SiteSelectionDashboard = () => {
           position: sticky;
           top: 56px; /* sticks below header */
           right: 0;
-          height: calc(100vh - 56px);
+          min-height: calc(100vh - 56px);
           width: 459px;
           background: white;
           border-left: 1px hsl(var(--color-surface-100)) solid;
@@ -347,7 +365,7 @@ const SiteSelectionDashboard = () => {
       `}</style>
       <div
         style={{
-          width: "100vw",
+          width: "100%",
           minHeight: "100vh",
           background: "hsl(var(--color-surface-50))",
           overflow: "visible", /* allow content to define height */
@@ -491,7 +509,7 @@ const SiteSelectionDashboard = () => {
         {/* Main Content Layout */}
         <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
           {/* Left Content Area */}
-            <div className="main-content" ref={mainContentRef} style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexWrap: "wrap", alignContent: "flex-start" }}>
+            <div className="main-content" ref={mainContentRef} style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexDirection: "column" }}>
             {/* Title and Description */}
               <div className="title-section" style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: "24px", display: "flex" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -595,7 +613,7 @@ const SiteSelectionDashboard = () => {
           </div>
 
           {/* Right Sidebar Form */}
-            <div className="right-sidebar">
+            <div className="right-sidebar" ref={rightSidebarRef}>
             {/* Bottom Button */}
               <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0", bottom: "0", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
