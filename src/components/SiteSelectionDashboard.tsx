@@ -256,9 +256,9 @@ const SiteSelectionDashboard = () => {
         /* Desktop: 3x2 layout (3 cards per row, 2 rows) */
         @media (min-width: 1400px) {
           .service-card {
-            flex: 1 1 calc(33.333% - 16px);
-            max-width: calc(33.333% - 16px);
-            min-width: 320px;
+            flex: 0 0 calc((100% - 48px) / 3); /* Exact width: (container - 2*24px gaps) / 3 cards */
+            max-width: calc((100% - 48px) / 3);
+            min-width: 0;
           }
           .main-content {
             padding: 32px;
@@ -268,6 +268,8 @@ const SiteSelectionDashboard = () => {
             padding: 0 32px; /* 32px from sidebars */
             margin-left: -32px; /* Offset to align with image start */
             margin-right: -32px; /* Offset to align with image end */
+            gap: 24px; /* Fixed gap between cards */
+            justify-content: space-between; /* Distribute cards evenly */
           }
           .mobile-request-btn {
             display: none !important;
@@ -283,9 +285,9 @@ const SiteSelectionDashboard = () => {
         /* Large Tablet: 2x3 layout (2 cards per row, 3 rows) */
         @media (min-width: 900px) and (max-width: 1399px) {
           .service-card {
-            flex: 1 1 calc(50% - 12px);
-            max-width: calc(50% - 12px);
-            min-width: 280px;
+            flex: 0 0 calc((100% - 24px) / 2); /* Exact width: (container - 1*24px gap) / 2 cards */
+            max-width: calc((100% - 24px) / 2);
+            min-width: 0;
           }
           .main-content {
             padding: 32px;
@@ -296,6 +298,8 @@ const SiteSelectionDashboard = () => {
             margin-left: -32px; /* Offset to align with image start */
             margin-right: -32px; /* Offset to align with image end */
             margin-top: -200px;
+            gap: 24px; /* Fixed gap between cards */
+            justify-content: space-between; /* Distribute cards evenly */
           }
           .right-sidebar {
             display: flex !important;
@@ -325,9 +329,9 @@ const SiteSelectionDashboard = () => {
         /* Tablet: 2x3 layout but sidebar hidden */
         @media (min-width: 768px) and (max-width: 899px) {
           .service-card {
-            flex: 1 1 calc(50% - 12px);
-            max-width: calc(50% - 12px);
-            min-width: 280px;
+            flex: 0 0 calc((100% - 24px) / 2); /* Exact width: (container - 1*24px gap) / 2 cards */
+            max-width: calc((100% - 24px) / 2);
+            min-width: 0;
           }
           .main-content {
             padding: 32px;
@@ -338,6 +342,8 @@ const SiteSelectionDashboard = () => {
             margin-left: -32px; /* Offset to align with image start */
             margin-right: -32px; /* Offset to align with image end */
             margin-top: -200px;
+            gap: 24px; /* Fixed gap between cards */
+            justify-content: space-between; /* Distribute cards evenly */
           }
           .right-sidebar {
             display: none !important;
