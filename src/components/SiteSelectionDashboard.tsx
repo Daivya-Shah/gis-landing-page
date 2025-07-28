@@ -174,6 +174,7 @@ const SiteSelectionDashboard = () => {
           display: inline-flex;
           height: 280px; /* Fixed height for consistency */
           overflow: hidden; /* Prevent text spillover */
+          min-width: 0; /* Prevent flex shrink issues */
         }
         
         .service-card-content {
@@ -182,10 +183,17 @@ const SiteSelectionDashboard = () => {
           flex-direction: column;
           gap: 24px;
           min-height: 0;
+          width: 100%;
         }
         
         .service-card-title {
           flex-shrink: 0;
+          font-size: 20px;
+          min-font-size: 18px; /* Ensure minimum readable size */
+          font-weight: 600;
+          line-height: 1.2;
+          word-wrap: break-word;
+          hyphens: auto;
         }
         
         .service-card-description {
@@ -195,6 +203,19 @@ const SiteSelectionDashboard = () => {
           -webkit-line-clamp: 4;
           -webkit-box-orient: vertical;
           line-height: 1.6;
+          font-size: 14px;
+          min-font-size: 12px; /* Ensure minimum readable size */
+          word-wrap: break-word;
+          hyphens: auto;
+        }
+        
+        /* Card icons - ensure they never shrink below readable size */
+        .service-card img {
+          flex-shrink: 0;
+          min-width: 48px;
+          min-height: 48px;
+          width: 48px;
+          height: 48px;
         }
         
         .cards-container {
@@ -253,12 +274,27 @@ const SiteSelectionDashboard = () => {
           }
         }
         
-        /* Tablet: 2 cards per row, keep sidebar visible */
-        @media (min-width: 768px) and (max-width: 1279px) {
-          .service-card {
-            flex: 1 1 calc(50% - 12px);
-            max-width: calc(50% - 12px);
-          }
+         /* Tablet: 2 cards per row, keep sidebar visible */
+         @media (min-width: 768px) and (max-width: 1279px) {
+           .service-card {
+             flex: 1 1 calc(50% - 12px);
+             max-width: calc(50% - 12px);
+             min-width: 280px; /* Ensure minimum width for readability */
+           }
+           .service-card-title {
+             font-size: 18px !important;
+             min-font-size: 16px !important;
+           }
+           .service-card-description {
+             font-size: 13px !important;
+             min-font-size: 12px !important;
+           }
+           .service-card img {
+             min-width: 44px !important;
+             min-height: 44px !important;
+             width: 44px !important;
+             height: 44px !important;
+           }
           .main-content {
             padding: 32px;
             margin-right: 0;
@@ -277,12 +313,30 @@ const SiteSelectionDashboard = () => {
           }
         }
         
-        /* Mobile: 1 card per row, hide sidebar, show request button */
-        @media (max-width: 767px) {
-          .service-card {
-            flex: 1 1 100%;
-            max-width: 100%;
-          }
+         /* Mobile: 1 card per row, hide sidebar, show request button */
+         @media (max-width: 767px) {
+           .service-card {
+             flex: 1 1 100%;
+             max-width: 100%;
+             padding: 32px; /* Reduce padding on mobile but keep generous */
+             height: auto; /* Allow height to adjust on mobile */
+             min-height: 240px; /* Ensure minimum height */
+           }
+           .service-card-title {
+             font-size: 18px !important;
+             min-font-size: 16px !important;
+           }
+           .service-card-description {
+             font-size: 14px !important;
+             min-font-size: 12px !important;
+             -webkit-line-clamp: 3; /* Slightly fewer lines on mobile */
+           }
+           .service-card img {
+             min-width: 40px !important;
+             min-height: 40px !important;
+             width: 40px !important;
+             height: 40px !important;
+           }
           .right-sidebar {
             display: none !important;
           }
