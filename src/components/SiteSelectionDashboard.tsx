@@ -89,10 +89,10 @@ const SiteSelectionDashboard = () => {
     };
   }, []);
 
-  // Close modal automatically if sidebar becomes visible (≥1800px)
+  // Close modal automatically if sidebar becomes visible (≥768px)
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1800 && showMobileForm) {
+      if (window.innerWidth >= 768 && showMobileForm) {
         setShowMobileForm(false);
       }
     };
@@ -232,15 +232,15 @@ const SiteSelectionDashboard = () => {
           display: none;
         }
         
-        /* Desktop: 3 cards per row, keep sidebar visible */
-        @media (min-width: 1800px) {
+        /* Desktop & Large Tablet: 3 cards per row, keep sidebar visible */
+        @media (min-width: 1280px) {
           .service-card {
             flex: 1 1 calc(33.333% - 16px);
             max-width: calc(33.333% - 16px);
           }
           .main-content {
             padding: 32px;
-            margin-right: 0; /* sidebar already occupies space in flex layout */
+            margin-right: 0;
           }
           .mobile-request-btn {
             display: none !important;
@@ -253,8 +253,8 @@ const SiteSelectionDashboard = () => {
           }
         }
         
-        /* Tablet: 2 cards per row, sidebar hidden */
-        @media (min-width: 992px) and (max-width: 1799px) {
+        /* Tablet: 2 cards per row, keep sidebar visible */
+        @media (min-width: 768px) and (max-width: 1279px) {
           .service-card {
             flex: 1 1 calc(50% - 12px);
             max-width: calc(50% - 12px);
@@ -267,15 +267,18 @@ const SiteSelectionDashboard = () => {
             margin-top: -200px;
           }
           .right-sidebar {
-            display: none !important;
+            display: flex !important;
           }
           .mobile-request-btn {
             display: none !important;
           }
+          .desktop-request-btn {
+            display: none !important;
+          }
         }
         
-        /* Mobile: 1 card per row, hide sidebar, show mobile button */
-        @media (max-width: 991px) {
+        /* Mobile: 1 card per row, hide sidebar, show request button */
+        @media (max-width: 767px) {
           .service-card {
             flex: 1 1 100%;
             max-width: 100%;
@@ -284,6 +287,9 @@ const SiteSelectionDashboard = () => {
             display: none !important;
           }
           .mobile-request-btn {
+            display: block !important;
+          }
+          .desktop-request-btn {
             display: none !important;
           }
           .main-content {
@@ -486,7 +492,7 @@ const SiteSelectionDashboard = () => {
               </div>
             </div>
             <button
-              className="desktop-request-btn"
+              className="mobile-request-btn"
               onClick={() => setShowMobileForm(true)}
               style={{
                 padding: "8px 16px",
@@ -496,7 +502,7 @@ const SiteSelectionDashboard = () => {
                 outlineOffset: "-1px",
                 border: "none",
                 cursor: "pointer",
-                display: "flex",
+                display: "none",
                 alignItems: "center",
                 gap: "8px",
               }}
