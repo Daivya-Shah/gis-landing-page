@@ -1,9 +1,5 @@
 import { Home, Building2, BarChart3, ChevronDown, ChevronRight, X, BriefcaseBusiness } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect, useRef } from "react";
 import heroImage from "@/components/Images/site-selection-hero.png";
 import newmarkLogo from "@/components/Icons/newmark-workframe.svg";
 import mailIcon from "@/components/Icons/mail.svg";
@@ -30,7 +26,7 @@ const SiteSelectionDashboard = () => {
   const [turnaround, setTurnaround] = useState<string>(turnaroundOptions[0]);
   const requiredDataOptions = [
     "Labor",
-    "Energy", 
+    "Energy",
     "Transit",
     "Occupancy",
     "Zoning & Regulatory",
@@ -43,6 +39,54 @@ const SiteSelectionDashboard = () => {
   const [showMobileForm, setShowMobileForm] = useState(false);
   const [dealStageOpen, setDealStageOpen] = useState(false);
 
+  // Refs for height management
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const rightSidebarRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+   
+  // Use ResizeObserver plus resize & scroll to sync sidebar height to content height
+  useEffect(() => {
+    const updateSidebarHeight = () => {
+      // Adjust left collapsed sidebar height
+      if (sidebarRef.current && mainContentRef.current) {
+        const sidebarTop = sidebarRef.current.getBoundingClientRect().top + window.scrollY;
+        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
+        const newHeight = contentBottom - sidebarTop;
+        sidebarRef.current.style.height = `${newHeight}px`;
+      }
+
+      // Adjust right sidebar height so it always reaches the bottom of the page
+      if (rightSidebarRef.current && mainContentRef.current) {
+        const sidebarTop = rightSidebarRef.current.getBoundingClientRect().top + window.scrollY;
+        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
+        const newHeight = contentBottom - sidebarTop;
+        // Only grow if content is taller than viewport; otherwise, fallback to min height
+        if (newHeight > 0) {
+          rightSidebarRef.current.style.minHeight = `${newHeight}px`;
+        }
+      }
+    };
+
+    updateSidebarHeight();
+
+    // Observe main content size changes
+    let resizeObserver: ResizeObserver | null = null;
+    if (window.ResizeObserver && mainContentRef.current) {
+      resizeObserver = new ResizeObserver(() => updateSidebarHeight());
+      resizeObserver.observe(mainContentRef.current);
+    }
+
+    // Listen to window events that may affect height
+    window.addEventListener("resize", updateSidebarHeight);
+    window.addEventListener("scroll", updateSidebarHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateSidebarHeight);
+      window.removeEventListener("scroll", updateSidebarHeight);
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
   // Close modal automatically if sidebar becomes visible (≥1800px)
   useEffect(() => {
     const handleResize = () => {
@@ -51,12 +95,14 @@ const SiteSelectionDashboard = () => {
       }
     };
 
+    // Run once on mount to ensure consistency
     handleResize();
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [showMobileForm]);
 
-  // Lock body scroll when modal is open
+  // lock body scroll when modal is open
   useEffect(() => {
     if (showMobileForm) {
       document.body.style.overflow = "hidden";
@@ -102,446 +148,906 @@ const SiteSelectionDashboard = () => {
     );
   };
 
-  const services = [
-    {
-      title: "Labor Analytics",
-      description: "Empower site selection with workforce data to optimize access to talent and reduce talent-related risk.",
-      icon: BriefcaseBusiness,
-      iconSize: 32
-    },
-    {
-      title: "Market Trends", 
-      description: "Deliver timely market intelligence for strategic portfolio decisions and competitive leasing advantages.",
-      icon: mapPinnedIcon,
-      iconSize: 32,
-      isImage: true
-    },
-    {
-      title: "GIS Data Analysis",
-      description: "Visualize location intelligence to identify optimal sites and assess spatial impacts on portfolio growth.",
-      icon: textSearchIcon,
-      iconSize: 32,
-      isImage: true
-    },
-    {
-      title: "Risk Mitigation",
-      description: "Uncover risks in occupancy, regulation, and market shifts to safeguard your property portfolio decisions.",
-      icon: shieldHalfIcon,
-      iconSize: 32,
-      isImage: true
-    },
-    {
-      title: "Transportation & Emergency Planning",
-      description: "Analyze transit and emergency access to ensure business continuity and site accessibility.",
-      icon: carFrontIcon,
-      iconSize: 32,
-      isImage: true
-    },
-    {
-      title: "Competitive Analysis",
-      description: "Benchmark nearby assets and leasing activity to inform strategies and differentiate your property's value.",
-      icon: chartNoAxesIcon,
-      iconSize: 32,
-      isImage: true
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Left Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-16 bg-white border-r border-border z-40 flex flex-col">
-        {/* Logo */}
-        <div className="p-3 border-b border-border">
-          <img src={newmarkLogo} className="w-6 h-6" alt="Newmark Logo" />
-        </div>
+    <div>
+      <style>{`
+        /* Prevent any accidental horizontal overflow */
+        html, body {
+          overflow-x: hidden;
+        }
+        .service-card {
+          padding: 48px;
+          background: hsl(var(--brand-white));
+          outline: 1px hsl(var(--brand-light-gray)) solid;
+          outline-offset: -1px;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+          gap: 24px;
+          display: inline-flex;
+          height: 280px; /* Fixed height for consistency */
+          overflow: hidden; /* Prevent text spillover */
+        }
+        
+        .service-card-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          min-height: 0;
+        }
+        
+        .service-card-title {
+          flex-shrink: 0;
+        }
+        
+        .service-card-description {
+          flex: 1;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          line-height: 1.6;
+        }
+        
+        .cards-container {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 24px;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-top: -250px; /* default desktop overlap */
+        }
+        
+        .main-content {
+          position: relative;
+        }
+        
+        .right-sidebar {
+          position: sticky;
+          top: 56px; /* sticks below header */
+          right: 0;
+          min-height: calc(100vh - 56px);
+          width: 459px;
+          background: white;
+          border-left: 1px hsl(var(--color-surface-100)) solid;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .mobile-request-btn {
+          display: none;
+        }
+        
+        .desktop-request-btn {
+          display: none;
+        }
+        
+        /* Desktop: 3x2 layout (3 cards per row, 2 rows) */
+        @media (min-width: 1400px) {
+          .service-card {
+            flex: 0 0 calc(33.333% - 16px);
+            max-width: calc(33.333% - 16px);
+            min-width: calc(33.333% - 16px);
+          }
+          .cards-container {
+            justify-content: space-between;
+          }
+          .main-content {
+            padding: 32px;
+            margin-right: 0;
+          }
+          .mobile-request-btn {
+            display: none !important;
+          }
+          .desktop-request-btn {
+            display: flex !important;
+          }
+          .right-sidebar {
+            display: flex !important;
+          }
+        }
+        
+        /* Tablet: 2x3 layout (2 cards per row, 3 rows) */
+        @media (min-width: 900px) and (max-width: 1399px) {
+          .service-card {
+            flex: 0 0 calc(50% - 12px);
+            max-width: calc(50% - 12px);
+            min-width: calc(50% - 12px);
+          }
+          .cards-container {
+            justify-content: space-between;
+          }
+          .main-content {
+            padding: 32px;
+            margin-right: 0;
+          }
+          .cards-container {
+            margin-top: -200px;
+          }
+          .right-sidebar {
+            display: none !important;
+          }
+          .mobile-request-btn {
+            display: flex !important;
+          }
+          .desktop-request-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Mobile: 1x6 layout (1 card per row, 6 rows) */
+        @media (max-width: 899px) {
+          .service-card {
+            flex: 1 1 100%;
+            max-width: 100%;
+            min-width: 100%;
+          }
+          .cards-container {
+            justify-content: center;
+          }
+          .right-sidebar {
+            display: none !important;
+          }
+          .mobile-request-btn {
+            display: flex !important;
+          }
+          .desktop-request-btn {
+            display: none !important;
+          }
+          .main-content {
+            padding: 32px 16px;
+            margin-right: 0 !important;
+          }
+          .hero-image {
+            width: 100% !important;
+            height: auto !important;
+            margin-right: 0 !important;
+          }
+          .cards-container {
+            width: 100% !important;
+            margin-top: -120px !important;
+            padding: 0 16px;
+          }
+          .title-section {
+            width: 100% !important;
+          }
+          .main-layout {
+            padding: 16px 0 16px 16px !important;
+          }
+        }
+        
+        .mobile-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px;
+        }
+        
+        .mobile-modal-content {
+          background: white;
+          border-radius: 8px;
+          width: 100%;
+          max-width: 500px;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+        }
+        
+        .modal-close {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 4px;
+          z-index: 10;
+        }
+        
+        .modal-close:hover {
+          background: hsl(var(--color-surface-100));
+        }
 
-        {/* Navigation Items */}
-        <div className="flex-1 py-4 px-2 space-y-1">
-          {/* First section */}
-          <div className="space-y-1 mb-6">
-            <div className="p-2 bg-sidebar-accent rounded-md">
-              <BriefcaseBusiness size={20} className="text-sidebar-primary mx-auto" />
+        /* Hover effect for sidebar items */
+        [data-collapsed="True"] div[data-type="Item"]:hover {
+          background: hsl(var(--menu-item-focus-background));
+        }
+        [data-collapsed="True"] div[data-type="Item"]:hover svg {
+          color: hsl(var(--menu-item-focus-color));
+        }
+        /* Hover effects for form elements */
+        .desktop-request-btn:hover,
+        .right-sidebar button[type="button"]:hover,
+        .modal-submit-btn:hover {
+          filter: brightness(1.05);
+        }
+      `}</style>
+      <div
+        style={{
+          width: "100%",
+          minHeight: "100vh",
+          background: "hsl(var(--color-surface-50))",
+          overflow: "visible",
+          justifyContent: "flex-start",
+          alignItems: "stretch",
+          display: "flex",
+        }}
+      >
+      {/* Collapsed Sidebar */}
+        <div
+          ref={sidebarRef}
+          data-collapsed="True"
+          style={{
+            height: "auto",
+            minHeight: "100vh",
+            padding: "8px",
+            background: "hsl(var(--color-primary-contrast))",
+            borderRight: "1px hsl(var(--content-border-color)) solid",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            display: "inline-flex",
+          }}
+        >
+        <div style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "flex" }}>
+          {/* Logo */}
+          <div data-collapsed="True" style={{ padding: "8px", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "inline-flex" }}>
+              <img src={newmarkLogo} style={{ width: "24px", height: "24px" }} alt="Newmark Logo" />
+          </div>
+
+          {/* First Menu Section */}
+          <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", gap: "4px", display: "flex" }}>
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Section Heading" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "inline-flex" }}></div>
+            
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Hover" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", background: "hsl(var(--menu-item-focus-background))", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <BriefcaseBusiness size={20} style={{ color: "hsl(var(--menu-item-focus-color))" }} />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={handshakeIcon} className="w-5 h-5 mx-auto" alt="Handshake" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={handshakeIcon} style={{ width: "20px", height: "20px" }} alt="Handshake" />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={userSearchIcon} className="w-5 h-5 mx-auto" alt="User Search" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={userSearchIcon} style={{ width: "20px", height: "20px" }} alt="User Search" />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={chartColumnIcon} className="w-5 h-5 mx-auto" alt="Chart Column" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={chartColumnIcon} style={{ width: "20px", height: "20px" }} alt="Chart Column" />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={filePenLineIcon} className="w-5 h-5 mx-auto" alt="File Pen" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={filePenLineIcon} style={{ width: "20px", height: "20px" }} alt="File Pen" />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={building2IconSvg} className="w-5 h-5 mx-auto" alt="Building" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={building2IconSvg} style={{ width: "20px", height: "20px" }} alt="Building" />
+              </div>
             </div>
           </div>
 
-          {/* Second section - Company Icons */}
-          <div className="space-y-1">
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <div className="w-5 h-5 mx-auto bg-purple-600 rounded flex items-center justify-center">
-                <img src={crucialLogoIcon} className="w-3 h-3" alt="Crucial AI" />
+          {/* Second Menu Section - Company Icons */}
+          <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", gap: "4px", display: "flex" }}>
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Section Heading" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "inline-flex" }}></div>
+            
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <div style={{ width: "20px", height: "20px", background: "hsl(var(--purple-600))", borderRadius: "6px", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
+                  <img src={crucialLogoIcon} style={{ width: "14px", height: "14px", objectFit: "contain" }} alt="Crucial AI" />
+                </div>
               </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={avatarsIcon} className="w-5 h-5 mx-auto rounded" alt="Avatars" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={avatarsIcon} style={{ width: "20px", height: "20px", borderRadius: "6px" }} alt="Avatars" />
+              </div>
             </div>
-            <div className="p-2 rounded-md hover:bg-sidebar-accent/50 cursor-pointer">
-              <img src={avatars2Icon} className="w-5 h-5 mx-auto rounded" alt="Avatars2" />
+
+            <div data-collaped="False" data-show-label="false" data-show-left-icon="true" data-show-right-icon="false" data-state="Default" data-type="Item" style={{ alignSelf: "stretch", padding: "8px", borderRadius: "6px", justifyContent: "center", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+              <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "flex" }}>
+                <img src={avatars2Icon} style={{ width: "20px", height: "20px", borderRadius: "6px" }} alt="Avatars2" />
+              </div>
             </div>
           </div>
         </div>
 
         {/* User Avatar at Bottom */}
-        <div className="p-2 border-t border-border">
-          <div className="w-7 h-7 bg-muted rounded-full mx-auto"></div>
+        <div data-show-label="false" data-show-right-icon="false" data-state="Idle" style={{ width: "40px", height: "44px", padding: "8px", borderRadius: "6px", justifyContent: "space-between", alignItems: "center", display: "inline-flex" }}>
+          <div style={{ flex: "1 1 0", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+              <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "hsl(var(--color-surface-200))" }}></div>
+          </div>
         </div>
       </div>
 
-      {/* Main Layout */}
-      <div className="flex ml-16">
-        {/* Main Content */}
-        <div className="flex-1 min-h-screen">
-          {/* Header */}
-          <header className="bg-white border-b border-border p-6 flex items-center justify-between">
-            <div className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md">
-              <Home size={14} className="text-muted-foreground" />
-              <ChevronRight size={14} className="text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Site Selection</span>
+      {/* Main Content Area */}
+      <div style={{ flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
+        <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "20px", display: "flex" }}>
+          {/* Header with Breadcrumb */}
+            <div style={{ alignSelf: "stretch", paddingLeft: "24px", paddingRight: "32px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-surface-0))", borderBottom: "1px hsl(var(--content-border-color)) solid", justifyContent: "space-between", alignItems: "center", gap: "10px", display: "inline-flex" }}>
+            <div data-segment-1="true" data-segment-2="false" data-segment-3="false" data-segment-4="false" data-segment-5="false" style={{ flex: "1 1 0", padding: "12px", background: "hsl(var(--breadcrumb-background))", borderRadius: "6px", justifyContent: "flex-start", alignItems: "center", gap: "7px", display: "flex" }}>
+              <div data-focus="False" data-hover="False" data-type="Icon" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
+                <Home size={14} style={{ color: "hsl(var(--breadcrumb-item-icon-color))" }} />
+              </div>
+                <ChevronRight size={14} style={{ color: "hsl(var(--breadcrumb-separator-color))" }} />
+              <div data-focus="False" data-hover="False" data-type="Label" style={{ justifyContent: "flex-start", alignItems: "flex-start", gap: "10px", display: "flex" }}>
+                <div style={{ color: "hsl(var(--breadcrumb-item-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "14px", wordWrap: "break-word" }}>Site Selection</div>
+              </div>
             </div>
-            <Button 
+            <button
+              className="desktop-request-btn"
               onClick={() => setShowMobileForm(true)}
-              className="xl:hidden"
+              style={{
+                padding: "8px 16px",
+                background: "hsl(var(--color-primary-color))",
+                borderRadius: "6px",
+                outline: "1px hsl(var(--button-primary-border-color)) solid",
+                outlineOffset: "-1px",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
-              Request report
-            </Button>
-          </header>
+              <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request report</div>
+            </button>
+            <button
+              className="mobile-request-btn"
+              onClick={() => setShowMobileForm(true)}
+              style={{
+                padding: "8px 16px",
+                background: "hsl(var(--color-primary-color))",
+                borderRadius: "6px",
+                outline: "1px hsl(var(--button-primary-border-color)) solid",
+                outlineOffset: "-1px",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request report</div>
+            </button>
+          </div>
+        </div>
 
-          {/* Content */}
-          <main className="p-8">
-            {/* Title Section */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-semibold text-foreground mb-2">
-                Site selection & location strategy reports
-              </h1>
-              <p className="text-muted-foreground font-medium">
-                Tailored insights to drive critical location decisions for your clients.
-              </p>
+        {/* Main Content Layout */}
+        <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
+          {/* Left Content Area */}
+            <div className="main-content" ref={mainContentRef} style={{ flex: "1 1 0", alignSelf: "stretch", padding: "32px", position: "relative", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex", flexDirection: "column" }}>
+            {/* Title and Description */}
+              <div className="title-section" style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: "24px", display: "flex" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "30px", fontFamily: "Inter", fontWeight: "600", lineHeight: "36px" }}>Site selection & location strategy reports</div>
+                  <div style={{ color: "hsl(var(--color-surface-500))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Tailored insights to drive critical location decisions for your clients.</div>
+                </div>
             </div>
 
             {/* Hero Image */}
-            <div className="relative mb-8">
-              <img 
-                src={heroImage} 
-                alt="Site Selection Dashboard"
-                className="w-full h-[553px] object-cover rounded-lg"
-              />
-              
-              {/* Service Cards - Overlapping the image with proper spacing */}
-              <div className="absolute -bottom-32 left-8 right-8">
-                {/* Grid with proper responsive layout and alignment */}
-                <div className="grid gap-6 
-                  grid-cols-1 
-                  sm:grid-cols-1 
-                  md:grid-cols-2 
-                  lg:grid-cols-2 
-                  xl:grid-cols-3 
-                  2xl:grid-cols-3">
-                  {services.map((service, index) => (
-                    <Card key={index} className="bg-white shadow-lg h-[280px] border border-gray-200">
-                      <CardContent className="p-8 h-full flex flex-col">
-                        <div className="flex items-start gap-6 mb-6">
-                          <div className="p-3 bg-blue-600 shadow-[8px_8px_0px_#23C4FF] flex items-center justify-center flex-shrink-0">
-                            {service.isImage ? (
-                              <img src={service.icon as string} className="w-8 h-8" alt={service.title} />
-                            ) : (
-                              <service.icon size={service.iconSize} className="text-white" />
-                            )}
-                          </div>
-                          <h3 className="text-xl lg:text-2xl font-normal text-foreground font-libre-baskerville leading-tight">
-                            {service.title}
-                          </h3>
-                        </div>
-                        <p className="text-sm lg:text-base text-muted-foreground font-medium leading-relaxed line-clamp-4 flex-1">
-                          {service.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <img 
+                className="hero-image"
+              style={{ 
+                  width: "100%", 
+                height: "553px", 
+                  objectFit: "cover",
+              }} 
+              src={heroImage} 
+              alt="Site Selection Dashboard"
+            />
 
-            {/* Spacer for overlapping cards */}
-            <div className="h-40"></div>
-          </main>
-        </div>
-
-        {/* Right Sidebar Form - Desktop Only */}
-        <div className="hidden xl:flex w-[459px] bg-white border-l border-border sticky top-0 h-screen flex-col">
-          {/* Form Content */}
-          <div className="flex-1 p-6 pb-24 overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-6">Get a custom report for your client</h2>
-            <p className="text-sm text-muted-foreground mb-6">
-              <span className="font-bold text-destructive">*</span> Fields with an asterisk are{" "}
-              <span className="font-bold">required</span>
-            </p>
-
-            <div className="space-y-6">
-              {/* Client Name Input */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Client Name <span className="text-destructive">*</span>
-                </label>
-                <div className="relative">
-                  <Building2 size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    placeholder="Enter company"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              {/* Deal Stage Select */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Deal Stage <span className="text-destructive">*</span>
-                </label>
-                <div className="relative">
-                  <BarChart3 size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground z-10" />
-                  <div className="deal-stage-container">
-                    <div
-                      onClick={toggleDealStageOpen}
-                      className="flex items-center justify-between w-full px-10 py-2 text-sm bg-background border border-input rounded-md cursor-pointer"
-                    >
-                      <span className={dealStage ? "text-foreground" : "text-muted-foreground"}>
-                        {dealStage || "Select deal stage"}
-                      </span>
-                      <ChevronDown size={16} className="text-muted-foreground" />
-                    </div>
-
-                    {dealStageOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-input rounded-md shadow-lg z-50">
-                        {dealStageOptions.map((opt) => (
-                          <div
-                            key={opt}
-                            onClick={() => handleSelectDealStage(opt)}
-                            className="px-3 py-2 text-sm cursor-pointer hover:bg-muted"
-                          >
-                            {opt}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+            {/* Service Cards Container */}
+              <div className="cards-container" style={{ width: "100%", marginTop: "-250px" }}>
+              {/* Labor Analytics Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <BriefcaseBusiness size={32} style={{ color: "hsl(var(--brand-white))" }} />
                   </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Labor Analytics</div>
                 </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Empower site selection with workforce data to optimize access to talent and reduce talent-related risk.</div>
+                  </div>
               </div>
 
-              {/* Turnaround Time Toggle Group */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Turnaround Time <span className="text-destructive">*</span>
-                </label>
-                <div className="flex bg-muted rounded-md p-0.5">
-                  {turnaroundOptions.map((opt, idx) => (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setTurnaround(opt)}
-                      className={`flex-1 px-3 py-1.5 text-sm font-semibold rounded transition-all ${
-                        opt === turnaround
-                          ? "bg-background text-primary shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
+              {/* Market Trends Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={mapPinnedIcon} style={{ width: "32px", height: "32px" }} alt="Map Pinned" />
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Market Trends</div>
                 </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Deliver timely market intelligence for strategic portfolio decisions and competitive leasing advantages.</div>
+                  </div>
               </div>
 
-              {/* Required Data Checkboxes */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">Required Data</label>
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  {requiredDataOptions.map((opt) => (
-                    <div key={opt} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={requiredData.includes(opt)}
-                        onChange={() => toggleRequired(opt)}
-                        className="w-4 h-4"
-                      />
-                      <span className="text-sm">{opt}</span>
-                    </div>
-                  ))}
+              {/* GIS Data Analysis Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={textSearchIcon} style={{ width: "32px", height: "32px" }} alt="Text Search" />
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>GIS Data Analysis</div>
                 </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Visualize location intelligence to identify optimal sites and assess spatial impacts on portfolio growth.</div>
+                  </div>
               </div>
 
-              {/* Notes Textarea */}
-              <div className="flex-1">
-                <label className="text-sm font-semibold mb-1 block">Notes</label>
-                <Textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Enter notes..."
-                  className="min-h-[100px] resize-y"
-                />
+              {/* Risk Mitigation Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={shieldHalfIcon} style={{ width: "32px", height: "32px" }} alt="Shield Half" />
+                  </div>
+                  <div style={{ color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Risk Mitigation</div>
+                </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Uncover risks in occupancy, regulation, and market shifts to safeguard your property portfolio decisions.</div>
+                  </div>
+              </div>
+
+              {/* Transportation & Emergency Planning Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={carFrontIcon} style={{ width: "32px", height: "32px" }} alt="Car Front" />
+                  </div>
+                  <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Transportation & Emergency Planning</div>
+                </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Analyze transit and emergency access to ensure business continuity and site accessibility.</div>
+                  </div>
+              </div>
+
+              {/* Competitive Analysis Card */}
+                <div className="service-card">
+                  <div className="service-card-content">
+                    <div className="service-card-title" style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "center", gap: "32px", display: "inline-flex" }}>
+                  <div style={{ padding: "12px", background: "hsl(var(--brand-newmark-blue))", boxShadow: "8px 8px 0px #23C4FF", justifyContent: "flex-start", alignItems: "center", gap: "10px", display: "flex" }}>
+                        <img src={chartNoAxesIcon} style={{ width: "32px", height: "32px" }} alt="Chart No Axes" />
+                  </div>
+                  <div style={{ flex: "1 1 0", color: "hsl(var(--brand-black))", fontSize: "24px", fontFamily: "Libre Baskerville", fontWeight: "400", lineHeight: "30px", wordWrap: "break-word" }}>Competitive Analysis</div>
+                </div>
+                    <div className="service-card-description" style={{ alignSelf: "stretch", color: "hsl(var(--brand-dark-gray))", fontSize: "16px", fontFamily: "Inter", fontWeight: "500", lineHeight: "25.60px", wordWrap: "break-word" }}>Benchmark nearby assets and leasing activity to inform strategies and differentiate your property's value.</div>
+                  </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-border">
-            <Button 
-              onClick={handleRequestReport}
-              className="w-full"
-            >
-              <img src={mailIcon} className="w-4 h-4 mr-2" alt="Mail" />
-              Request client report
-            </Button>
+          {/* Right Sidebar Form */}
+            <div className="right-sidebar" ref={rightSidebarRef}>
+            {/* Bottom Button */}
+              <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0", bottom: "0", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
+                <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
+                  <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
+                <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Request client report</div>
+                </button>
+            </div>
+
+            {/* Form Content */}
+            <div style={{ alignSelf: "stretch", flex: 1, padding: "24px", paddingBottom: "96px", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", gap: "24px", display: "flex" }}>
+              <div style={{ alignSelf: "stretch", flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
+                <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "16px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Get a custom report for your client</div>
+                <div style={{ alignSelf: "stretch" }}>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "700", lineHeight: "22px", wordWrap: "break-word" }}>*</span>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}> Fields with an asterisk are </span>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "700", lineHeight: "22px", wordWrap: "break-word" }}>required</span>
+                </div>
+
+                {/* Client Name Input */}
+                <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Client Name *</div>
+                    <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Building2 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                      <input
+                        type="text"
+                        value={clientName}
+                        onChange={(e) => setClientName(e.target.value)}
+                        placeholder="Enter company"
+                        style={{
+                          flex: 1,
+                          border: "none",
+                          outline: "none",
+                          background: "transparent",
+                          color: "hsl(var(--color-surface-900))",
+                          fontFamily: "Inter",
+                          fontSize: "14px",
+                        }}
+                      />
+                  </div>
+                </div>
+
+                {/* Deal Stage Input */}
+                <div style={{ alignSelf: "stretch", height: "64px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
+                    <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                    <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
+                      <div
+                        onClick={toggleDealStageOpen}
+                        style={{
+                          cursor: "pointer",
+                          userSelect: "none",
+                          color: dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))",
+                          fontFamily: "Inter",
+                          fontSize: "14px",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          height: "22px",
+                        }}
+                      >
+                        {dealStage || "Select deal stage"}
+                      </div>
+
+                      {dealStageOpen && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "calc(100% + 4px)",
+                            left: 0,
+                            right: "-24px",
+                            background: "hsl(var(--brand-white))",
+                            outline: "1px hsl(var(--brand-light-gray)) solid",
+                            borderRadius: "6px",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                            zIndex: 100,
+                          }}
+                        >
+                          {dealStageOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={() => handleSelectDealStage(opt)}
+                              style={{
+                                padding: "8px 12px",
+                                cursor: "pointer",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                color: "hsl(var(--color-surface-900))",
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--menu-item-focus-background))")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                  </div>
+                </div>
+
+                {/* Turnaround Time Toggle Group */}
+                <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Turnaround Time *</div>
+                    <div style={{ alignSelf: "stretch", background: "hsl(var(--color-surface-100))", borderRadius: "6px", display: "flex" }}>
+                      {turnaroundOptions.map((opt, idx) => {
+                          const isSelected = opt === turnaround;
+                          const outerRadius: any = {};
+                          if (idx === 0) {
+                           outerRadius.borderTopLeftRadius = "6px";
+                           outerRadius.borderBottomLeftRadius = "6px";
+                          }
+                          if (idx === turnaroundOptions.length - 1) {
+                           outerRadius.borderTopRightRadius = "6px";
+                           outerRadius.borderBottomRightRadius = "6px";
+                          }
+                          return (
+                            <div key={opt} style={{ flex: 1, padding: "2px", background: isSelected ? "hsl(var(--togglebutton-checked-background))" : "transparent", transition: "background 0.3s ease", ...outerRadius, borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", borderRight: idx === turnaroundOptions.length - 1 ? "1px hsl(var(--color-surface-300)) solid" : "none" }}>
+                              <button
+                                type="button"
+                                className="turnaround-toggle-btn"
+                                onClick={() => setTurnaround(opt)}
+                                style={{
+                                  width: "100%",
+                                  padding: "6px 10px",
+                                  background: isSelected ? "hsl(var(--togglebutton-content-checked-background))" : "transparent",
+                                  boxShadow: isSelected ? "0px 1px 2px rgba(18,18,23,0.05)" : "none",
+                                  borderRadius: "4px",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  color: isSelected ? "hsl(var(--color-primary-color))" : "hsl(var(--togglebutton-color))",
+                                  fontFamily: "Inter",
+                                  fontWeight: 600,
+                                  fontSize: "14px",
+                                  transition: "background 0.3s ease, color 0.3s ease",
+                                }}
+                              >
+                                {opt}
+                              </button>
+                      </div>
+                          );
+                        })}
+                  </div>
+                </div>
+
+                {/* Required Data Checkboxes */}
+                <div style={{ alignSelf: "stretch", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Required Data</div>
+                  <div style={{ alignSelf: "stretch", justifyContent: "flex-start", alignItems: "flex-start", display: "inline-flex" }}>
+                    <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
+                        {requiredDataOptions.slice(0,4).map((opt)=>(
+                          <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
+                            <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
+                            <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
+                      </div>
+                        ))}
+                    </div>
+                    <div style={{ flex: "1 1 0", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "inline-flex" }}>
+                        {requiredDataOptions.slice(4).map((opt)=>(
+                          <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
+                            <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
+                            <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
+                      </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notes Textarea */}
+                <div style={{ alignSelf: "stretch", flex: "1 1 0", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ alignSelf: "stretch", color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Notes</div>
+                    <div style={{ alignSelf: "stretch", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+                      <textarea
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="Enter notes..."
+                        style={{
+                          flex: 1,
+                          width: "100%",
+                          border: "none",
+                          outline: "none",
+                          background: "transparent",
+                          fontFamily: "Inter",
+                          fontSize: "14px",
+                          color: "hsl(var(--color-surface-900))",
+                          resize: "vertical",
+                          minHeight: "100px",
+                        }}
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mobile Modal Form */}
       {showMobileForm && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Get a custom report for your client</h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMobileForm(false)}
-              >
-                <X size={20} />
-              </Button>
-            </div>
+        <div className="mobile-modal" onClick={() => setShowMobileForm(false)}>
+          <div className="mobile-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close"
+              onClick={() => setShowMobileForm(false)}
+            >
+              <X size={20} style={{ color: "hsl(var(--color-surface-600))" }} />
+            </button>
             
-            <div className="p-6 space-y-6">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-bold text-destructive">*</span> Fields with an asterisk are{" "}
-                <span className="font-bold">required</span>
-              </p>
-
-              {/* Client Name Input */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Client Name <span className="text-destructive">*</span>
-                </label>
-                <div className="relative">
-                  <Building2 size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    placeholder="Enter company"
-                    className="pl-10"
-                  />
+            <div style={{ padding: "24px", paddingTop: "48px" }}>
+              <div style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "24px", display: "flex" }}>
+                <div style={{ color: "hsl(var(--color-surface-900))", fontSize: "20px", fontFamily: "Inter", fontWeight: "600", lineHeight: "28px", wordWrap: "break-word" }}>Get a custom report for your client</div>
+                <div>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "700", lineHeight: "22px", wordWrap: "break-word" }}>*</span>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "400", lineHeight: "22px", wordWrap: "break-word" }}> Fields with an asterisk are </span>
+                  <span style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "700", lineHeight: "22px", wordWrap: "break-word" }}>required</span>
                 </div>
-              </div>
 
-              {/* Deal Stage Select */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Deal Stage <span className="text-destructive">*</span>
-                </label>
-                <div className="relative">
-                  <BarChart3 size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground z-10" />
-                  <div className="deal-stage-container">
-                    <div
-                      onClick={toggleDealStageOpen}
-                      className="flex items-center justify-between w-full px-10 py-2 text-sm bg-background border border-input rounded-md cursor-pointer"
-                    >
-                      <span className={dealStage ? "text-foreground" : "text-muted-foreground"}>
-                        {dealStage || "Select deal stage"}
-                      </span>
-                      <ChevronDown size={16} className="text-muted-foreground" />
-                    </div>
-
-                    {dealStageOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-input rounded-md shadow-lg z-50">
-                        {dealStageOptions.map((opt) => (
-                          <div
-                            key={opt}
-                            onClick={() => handleSelectDealStage(opt)}
-                            className="px-3 py-2 text-sm cursor-pointer hover:bg-muted"
-                          >
-                            {opt}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                {/* Client Name Input */}
+                <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Client Name *</div>
+                  <div style={{ width: "100%", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Building2 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                    <input
+                      type="text"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      placeholder="Enter company"
+                      style={{
+                        flex: 1,
+                        border: "none",
+                        outline: "none",
+                        background: "transparent",
+                        color: "hsl(var(--color-surface-900))",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                      }}
+                    />
                   </div>
                 </div>
-              </div>
 
-              {/* Turnaround Time Toggle Group */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">
-                  Turnaround Time <span className="text-destructive">*</span>
-                </label>
-                <div className="flex bg-muted rounded-md p-0.5">
-                  {turnaroundOptions.map((opt) => (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setTurnaround(opt)}
-                      className={`flex-1 px-2 py-1.5 text-xs font-semibold rounded transition-all ${
-                        opt === turnaround
-                          ? "bg-background text-primary shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                {/* Deal Stage Input */}
+                <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Deal Stage *</div>
+                  <div style={{ width: "100%", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <BarChart3 size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                    <div className="deal-stage-container" style={{ position: "relative", flex: 1 }}>
+                      <div
+                        onClick={toggleDealStageOpen}
+                        style={{
+                          cursor: "pointer",
+                          userSelect: "none",
+                          color: dealStage ? "hsl(var(--color-surface-900))" : "hsl(var(--inputtext-placeholder-color))",
+                          fontFamily: "Inter",
+                          fontSize: "14px",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          height: "22px",
+                        }}
+                      >
+                        {dealStage || "Select deal stage"}
+                      </div>
 
-              {/* Required Data Checkboxes */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">Required Data</label>
-                <div className="space-y-3 mt-2">
-                  {requiredDataOptions.map((opt) => (
-                    <div key={opt} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={requiredData.includes(opt)}
-                        onChange={() => toggleRequired(opt)}
-                        className="w-4 h-4"
-                      />
-                      <span className="text-sm">{opt}</span>
+                      {dealStageOpen && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "calc(100% + 4px)",
+                            left: 0,
+                            right: "-24px",
+                            background: "hsl(var(--brand-white))",
+                            outline: "1px hsl(var(--brand-light-gray)) solid",
+                            borderRadius: "6px",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                            zIndex: 100,
+                          }}
+                        >
+                          {dealStageOptions.map((opt) => (
+                            <div
+                              key={opt}
+                              onClick={() => handleSelectDealStage(opt)}
+                              style={{
+                                padding: "8px 12px",
+                                cursor: "pointer",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                color: "hsl(var(--color-surface-900))",
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--menu-item-focus-background))")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                            >
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                    <ChevronDown size={16} style={{ color: "hsl(var(--iconfield-icon-color))" }} />
+                  </div>
                 </div>
-              </div>
 
-              {/* Notes Textarea */}
-              <div>
-                <label className="text-sm font-semibold mb-1 block">Notes</label>
-                <Textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Enter notes..."
-                  className="min-h-[80px]"
-                />
-              </div>
+                {/* Turnaround Time Toggle Group */}
+                <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Turnaround Time *</div>
+                  <div style={{ width: "100%", background: "hsl(var(--color-surface-100))", borderRadius: "6px", display: "flex" }}>
+                    {turnaroundOptions.map((opt, idx) => {
+                        const isSelected = opt === turnaround;
+                        const outerRadius: any = {};
+                        if (idx === 0) {
+                         outerRadius.borderTopLeftRadius = "6px";
+                         outerRadius.borderBottomLeftRadius = "6px";
+                        }
+                        if (idx === turnaroundOptions.length - 1) {
+                         outerRadius.borderTopRightRadius = "6px";
+                         outerRadius.borderBottomRightRadius = "6px";
+                        }
+                        return (
+                          <div key={opt} style={{ flex: 1, padding: "2px", background: isSelected ? "hsl(var(--togglebutton-checked-background))" : "transparent", transition: "background 0.3s ease", ...outerRadius, borderLeft: "1px hsl(var(--color-surface-300)) solid", borderTop: "1px hsl(var(--color-surface-300)) solid", borderBottom: "1px hsl(var(--color-surface-300)) solid", borderRight: idx === turnaroundOptions.length - 1 ? "1px hsl(var(--color-surface-300)) solid" : "none" }}>
+                            <button
+                              type="button"
+                              className="turnaround-toggle-btn"
+                              onClick={() => setTurnaround(opt)}
+                              style={{
+                                width: "100%",
+                                padding: "6px 10px",
+                                background: isSelected ? "hsl(var(--togglebutton-content-checked-background))" : "transparent",
+                                boxShadow: isSelected ? "0px 1px 2px rgba(18,18,23,0.05)" : "none",
+                                borderRadius: "4px",
+                                border: "none",
+                                cursor: "pointer",
+                                color: isSelected ? "hsl(var(--color-primary-color))" : "hsl(var(--togglebutton-color))",
+                                fontFamily: "Inter",
+                                fontWeight: 600,
+                                fontSize: "14px",
+                                transition: "background 0.3s ease, color 0.3s ease",
+                              }}
+                            >
+                              {opt}
+                            </button>
+                    </div>
+                        );
+                      })}
+                </div>
+                </div>
 
-              <Button 
-                onClick={handleRequestReport}
-                className="w-full"
-              >
-                <img src={mailIcon} className="w-4 h-4 mr-2" alt="Mail" />
-                Request client report
-              </Button>
+                {/* Required Data Checkboxes */}
+                <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Required Data</div>
+                  <div style={{ width: "100%", paddingTop: "8px", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "16px", display: "flex" }}>
+                      {requiredDataOptions.map((opt)=>(
+                        <div key={opt} className="checkbox-row" style={{ display:"flex", alignItems:"center", gap:"7px", transition:"background 0.2s ease" }}>
+                          <input type="checkbox" checked={requiredData.includes(opt)} onChange={()=>toggleRequired(opt)} style={{ width:"17.5px", height:"17.5px" }} />
+                          <div style={{ color:"hsl(var(--text-color))", fontSize:"14px", fontFamily:"Inter", lineHeight:"22px" }}>{opt}</div>
+                    </div>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Notes Textarea */}
+                <div style={{ width: "100%", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", gap: "4px", display: "flex" }}>
+                  <div style={{ color: "hsl(var(--text-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Notes</div>
+                  <div style={{ width: "100%", paddingLeft: "12px", paddingRight: "12px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--inputtext-background))", boxShadow: "0px 1px 2px rgba(18, 18, 23, 0.05)", borderRadius: "6px", outline: "1px hsl(var(--inputtext-border-color)) solid", outlineOffset: "-1px", justifyContent: "flex-start", alignItems: "center", gap: "8px", display: "inline-flex" }}>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Enter notes..."
+                      style={{
+                        flex: 1,
+                        width: "100%",
+                        border: "none",
+                        outline: "none",
+                        background: "transparent",
+                        fontFamily: "Inter",
+                        fontSize: "14px",
+                        color: "hsl(var(--color-surface-900))",
+                        resize: "vertical",
+                        minHeight: "80px",
+                      }}
+                    ></textarea>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={handleRequestReport}
+                  className="modal-submit-btn"
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    background: "hsl(var(--color-primary-color))",
+                    borderRadius: "6px",
+                    outline: "1px hsl(var(--button-primary-border-color)) solid",
+                    outlineOffset: "-1px",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <img src={mailIcon} style={{ width: "16px", height: "16px" }} alt="Mail" />
+                  <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px" }}>Request client report</div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
