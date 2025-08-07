@@ -44,19 +44,25 @@ const SiteSelectionDashboard = () => {
   const rightSidebarRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
    
-  // Use ResizeObserver plus resize & scroll to sync sidebar height to screen height
+  // Use ResizeObserver plus resize & scroll to sync sidebar heights
   useEffect(() => {
     const updateSidebarHeight = () => {
-      // Make left sidebar always reach bottom of screen
-      if (sidebarRef.current) {
-        sidebarRef.current.style.minHeight = "100vh";
-        sidebarRef.current.style.height = "100vh";
-      }
+      // Calculate the height needed based on main content
+      if (mainContentRef.current) {
+        const contentHeight = mainContentRef.current.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        const finalHeight = Math.max(contentHeight, viewportHeight);
+        
+        // Make both sidebars the same height to prevent uneven scrolling
+        if (sidebarRef.current) {
+          sidebarRef.current.style.height = `${finalHeight}px`;
+          sidebarRef.current.style.minHeight = `${finalHeight}px`;
+        }
 
-      // Make right sidebar always reach bottom of screen
-      if (rightSidebarRef.current) {
-        rightSidebarRef.current.style.minHeight = "100vh";
-        rightSidebarRef.current.style.height = "100vh";
+        if (rightSidebarRef.current) {
+          rightSidebarRef.current.style.height = `${finalHeight}px`;
+          rightSidebarRef.current.style.minHeight = `${finalHeight}px`;
+        }
       }
     };
 
@@ -80,10 +86,10 @@ const SiteSelectionDashboard = () => {
     };
   }, []);
 
-  // Close modal automatically if sidebar becomes visible (≥1500px)
+  // Close modal automatically if sidebar becomes visible (≥1600px)
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1500 && showMobileForm) {
+      if (window.innerWidth >= 1600 && showMobileForm) {
         setShowMobileForm(false);
       }
     };
@@ -220,7 +226,7 @@ const SiteSelectionDashboard = () => {
         }
         
         /* Desktop: 3x2 layout (3 cards per row, 2 rows) */
-        @media (min-width: 1500px) {
+        @media (min-width: 1600px) {
           .service-card {
             flex: 0 0 calc(33.333% - 16px);
             max-width: calc(33.333% - 16px);
@@ -245,7 +251,7 @@ const SiteSelectionDashboard = () => {
         }
         
         /* Tablet: 2x3 layout (2 cards per row, 3 rows) */
-        @media (min-width: 900px) and (max-width: 1499px) {
+        @media (min-width: 900px) and (max-width: 1599px) {
           .service-card {
             flex: 0 0 calc(50% - 12px);
             max-width: calc(50% - 12px);
