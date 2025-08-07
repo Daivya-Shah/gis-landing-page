@@ -80,10 +80,10 @@ const SiteSelectionDashboard = () => {
     };
   }, []);
 
-  // Close modal automatically if sidebar becomes visible (≥1800px)
+  // Close modal automatically if sidebar becomes visible (≥1500px)
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1800 && showMobileForm) {
+      if (window.innerWidth >= 1500 && showMobileForm) {
         setShowMobileForm(false);
       }
     };
@@ -220,7 +220,7 @@ const SiteSelectionDashboard = () => {
         }
         
         /* Desktop: 3x2 layout (3 cards per row, 2 rows) */
-        @media (min-width: 1400px) {
+        @media (min-width: 1500px) {
           .service-card {
             flex: 0 0 calc(33.333% - 16px);
             max-width: calc(33.333% - 16px);
@@ -245,7 +245,7 @@ const SiteSelectionDashboard = () => {
         }
         
         /* Tablet: 2x3 layout (2 cards per row, 3 rows) */
-        @media (min-width: 900px) and (max-width: 1399px) {
+        @media (min-width: 900px) and (max-width: 1499px) {
           .service-card {
             flex: 0 0 calc(50% - 12px);
             max-width: calc(50% - 12px);
@@ -637,7 +637,7 @@ const SiteSelectionDashboard = () => {
           {/* Right Sidebar Form */}
             <div className="right-sidebar" ref={rightSidebarRef}>
             {/* Bottom Button */}
-              <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", position: "sticky", bottom: "0", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex", zIndex: "10" }}>
+              <div style={{ paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", position: "fixed", bottom: "0", right: "0", width: "459px", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex", zIndex: "10" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
                   <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
                 <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Request client report</div>
