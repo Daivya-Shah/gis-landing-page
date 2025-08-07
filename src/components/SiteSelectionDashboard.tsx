@@ -47,21 +47,29 @@ const SiteSelectionDashboard = () => {
   // Use ResizeObserver plus resize & scroll to sync sidebar heights
   useEffect(() => {
     const updateSidebarHeight = () => {
-      // Calculate the height needed based on main content
+      // Calculate the height needed based on main content and document
       if (mainContentRef.current) {
         const contentHeight = mainContentRef.current.scrollHeight;
-        const viewportHeight = window.innerHeight;
-        const finalHeight = Math.max(contentHeight, viewportHeight);
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+        const finalHeight = Math.max(contentHeight, documentHeight);
         
-        // Make both sidebars the same height to prevent uneven scrolling
+        // Make left sidebar extend to full page height
         if (sidebarRef.current) {
           sidebarRef.current.style.height = `${finalHeight}px`;
           sidebarRef.current.style.minHeight = `${finalHeight}px`;
         }
 
+        // Make right sidebar match viewport height (sticky behavior)
         if (rightSidebarRef.current) {
-          rightSidebarRef.current.style.height = `${finalHeight}px`;
-          rightSidebarRef.current.style.minHeight = `${finalHeight}px`;
+          const viewportHeight = window.innerHeight;
+          rightSidebarRef.current.style.height = `${viewportHeight}px`;
+          rightSidebarRef.current.style.minHeight = `${viewportHeight}px`;
         }
       }
     };
@@ -243,7 +251,7 @@ const SiteSelectionDashboard = () => {
             display: none !important;
           }
           .desktop-request-btn {
-            display: flex !important;
+            display: none !important;
           }
           .right-sidebar {
             display: flex !important;
