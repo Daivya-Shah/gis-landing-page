@@ -44,26 +44,19 @@ const SiteSelectionDashboard = () => {
   const rightSidebarRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
    
-  // Use ResizeObserver plus resize & scroll to sync sidebar height to content height
+  // Use ResizeObserver plus resize & scroll to sync sidebar height to screen height
   useEffect(() => {
     const updateSidebarHeight = () => {
-      // Adjust left collapsed sidebar height
-      if (sidebarRef.current && mainContentRef.current) {
-        const sidebarTop = sidebarRef.current.getBoundingClientRect().top + window.scrollY;
-        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
-        const newHeight = contentBottom - sidebarTop;
-        sidebarRef.current.style.height = `${newHeight}px`;
+      // Make left sidebar always reach bottom of screen
+      if (sidebarRef.current) {
+        sidebarRef.current.style.minHeight = "100vh";
+        sidebarRef.current.style.height = "100vh";
       }
 
-      // Adjust right sidebar height so it always reaches the bottom of the page
-      if (rightSidebarRef.current && mainContentRef.current) {
-        const sidebarTop = rightSidebarRef.current.getBoundingClientRect().top + window.scrollY;
-        const contentBottom = mainContentRef.current.getBoundingClientRect().bottom + window.scrollY;
-        const newHeight = contentBottom - sidebarTop;
-        // Only grow if content is taller than viewport; otherwise, fallback to min height
-        if (newHeight > 0) {
-          rightSidebarRef.current.style.minHeight = `${newHeight}px`;
-        }
+      // Make right sidebar always reach bottom of screen
+      if (rightSidebarRef.current) {
+        rightSidebarRef.current.style.minHeight = "100vh";
+        rightSidebarRef.current.style.height = "100vh";
       }
     };
 
@@ -206,13 +199,14 @@ const SiteSelectionDashboard = () => {
         
         .right-sidebar {
           position: sticky;
-          top: 56px; /* sticks below header */
+          top: 0; /* start from top of viewport */
           right: 0;
-          min-height: calc(100vh - 56px);
+          height: 100vh;
+          min-height: 100vh;
           width: 459px;
           background: white;
           border-left: 1px hsl(var(--color-surface-100)) solid;
-          overflow: hidden;
+          overflow-y: auto;
           display: flex;
           flex-direction: column;
         }
@@ -643,7 +637,7 @@ const SiteSelectionDashboard = () => {
           {/* Right Sidebar Form */}
             <div className="right-sidebar" ref={rightSidebarRef}>
             {/* Bottom Button */}
-              <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", left: "0", bottom: "0", position: "absolute", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex" }}>
+              <div style={{ width: "100%", paddingLeft: "24px", paddingRight: "24px", paddingTop: "16px", paddingBottom: "16px", position: "sticky", bottom: "0", background: "white", borderTop: "1px #DFE1E6 solid", justifyContent: "flex-end", alignItems: "center", gap: "16px", display: "inline-flex", zIndex: "10" }}>
                 <button type="button" onClick={handleRequestReport} style={{ flex: "1 1 0", paddingLeft: "16px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", background: "hsl(var(--color-primary-color))", borderRadius: "6px", outline: "1px hsl(var(--button-primary-border-color)) solid", outlineOffset: "-1px", justifyContent: "center", alignItems: "center", gap: "8px", display: "flex", border: "none", cursor: "pointer" }}>
                   <img src={mailIcon} style={{ width: "14px", height: "14px" }} alt="Mail" />
                 <div style={{ color: "hsl(var(--button-primary-color))", fontSize: "14px", fontFamily: "Inter", fontWeight: "600", lineHeight: "22px", wordWrap: "break-word" }}>Request client report</div>
